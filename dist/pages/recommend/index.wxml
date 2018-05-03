@@ -1,0 +1,52 @@
+
+    <import src="../../libs/wxParse/wxParse.wxml" class="_0016a86"/>
+    <view class="recommend _0016a86">
+        <view class="_0016a86">
+            <view class="header l-c-c _0016a86">
+                <view class="l-c _0016a86">
+                    <image class="head-img _0016a86" src="{{userInfo.avatarUrl}}" mode="aspectFill"/>
+                    <text class="name _0016a86">{{userInfo.nickName}}</text>
+                </view>
+                <view class="l-c right _0016a86">
+                    <view class="l-c _0016a86" bindtap="toggleUpvote">
+                        <view class="iconfont icon icon-praise _0016a86"/>
+                        <text class="_0016a86">{{item.upvoteNum}}</text>
+                    </view>
+                    <view class="l-c _0016a86">
+                        <view class="iconfont icon icon-message_fill _0016a86"/>
+                        <text class="_0016a86">{{item.commentsNum}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="description _0016a86">
+                <view class="title _0016a86">{{item.title}}</view>
+                <view class="category _0016a86">{{tags}}</view>
+            </view>
+            <view class="content _0016a86">
+                <template is="wxParse" data="{{wxParseData: article.nodes}}" class="_0016a86"/>
+            </view>
+            
+    <view class="comments _02c155f _0016a86"  wx:if="{{$vComments$comments.length > 0}}">
+        <view class="top _02c155f">
+            <text class="_02c155f">{{$vComments$comments.length + ' 条评论'}}</text>
+        </view>
+        <block wx:for="{{$vComments$newComments}}" wx:key="{{index}}" class="_02c155f">
+            <view class="comment _02c155f">
+                <view class="user _02c155f">
+                    <view class="user-info _02c155f" bindtap="$vComments$goUserInfo" data-userid="{{item.user_id}}">
+                        <image class="avator _02c155f" src="{{item.avator }}" mode="aspectFill" lazy-load="true"/>
+                        <text class="username _02c155f">{{item.nickName}}</text>
+                    </view>
+                    <text class="time _02c155f">{{item.created_at}}</text>
+                </view>
+                <text class="content _02c155f">{{ item.content }}</text>
+            </view>
+        </block>
+    </view>
+            
+    <view class="edit _aa40698 _0016a86">
+        <input confirm-type="完成" bindinput="$vEditor$bindInput" value="{{$vEditor$inputValue}}" placeholder="请输入不少于15字的评论" class="_aa40698"/>
+        <button bindtap="$vEditor$tap" class="_aa40698">发布</button>
+    </view>
+        </view>
+    </view>

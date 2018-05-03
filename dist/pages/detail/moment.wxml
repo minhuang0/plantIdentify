@@ -1,0 +1,59 @@
+
+    <view class="me _178eff6">
+        
+    <view class="moment _04ee5ab _178eff6" catchtap="$vMoment$goMomentDetail">
+        <view class="monent-header _04ee5ab" bindtap="$vMoment$goUserInfo" data-userid="{{$vMoment$moment.user_id}}">
+            <view class="avatar _04ee5ab">
+                <image src="{{$vMoment$moment.avatar}}" class="_04ee5ab"/>
+            </view>
+            <view class="content-view _04ee5ab">
+                <view class="name-view _04ee5ab">
+                    <text class="name _04ee5ab">{{$vMoment$moment.name}}</text>
+                    <text class="create-time _04ee5ab">{{$vMoment$moment.createTime}}</text>
+                </view>
+                <!-- <text class="description">该用户没有个性签名</text> -->
+            </view>
+        </view>
+        <text class="comment-content _04ee5ab"  wx:if="{{$vMoment$moment.content}}">{{$vMoment$moment.content}}</text>
+        <block class="_04ee5ab" wx:for="{{$vMoment$moment.images}}" wx:for-index="$vMoment$index" wx:for-item="$vMoment$item" wx:key="$vMoment$index">
+            <view class="images _04ee5ab">
+                <block class="_04ee5ab" wx:for="{{$vMoment$item}}" wx:for-index="$vMoment$i" wx:for-item="$vMoment$img" wx:key="$vMoment$i">
+                    <image class="img _04ee5ab" src="{{$vMoment$img}}" mode="aspectFill"/>
+                </block>
+            </view>
+        </block>
+        <view class="buttons _04ee5ab">
+            <view catchtap="$vMoment$toggleMoments" class="_04ee5ab">
+                <image class="icon _04ee5ab" src="{{$vMoment$icons.message}}"/>
+                <text class="_04ee5ab">{{$vMoment$moment.commentsNum}}</text>
+            </view>
+            <view catchtap="$vMoment$toggleUpvote" class="_04ee5ab">
+                <image class="icon _04ee5ab" style="margin-left: 40rpx;" src="{{$vMoment$icons.upvote}}"/>
+                <text class="_04ee5ab">{{$vMoment$moment.upvoteNum}}</text>
+            </view>
+        </view>
+    </view>
+        
+    <view class="comments _02c155f _178eff6"  wx:if="{{$vComments$comments.length > 0}}">
+        <view class="top _02c155f">
+            <text class="_02c155f">{{$vComments$comments.length + ' 条评论'}}</text>
+        </view>
+        <block wx:for="{{$vComments$newComments}}" wx:key="{{index}}" class="_02c155f">
+            <view class="comment _02c155f">
+                <view class="user _02c155f">
+                    <view class="user-info _02c155f" bindtap="$vComments$goUserInfo" data-userid="{{item.user_id}}">
+                        <image class="avator _02c155f" src="{{item.avator }}" mode="aspectFill" lazy-load="true"/>
+                        <text class="username _02c155f">{{item.nickName}}</text>
+                    </view>
+                    <text class="time _02c155f">{{item.created_at}}</text>
+                </view>
+                <text class="content _02c155f">{{ item.content }}</text>
+            </view>
+        </block>
+    </view>
+        
+    <view class="edit _aa40698 _178eff6">
+        <input confirm-type="完成" bindinput="$vEditor$bindInput" value="{{$vEditor$inputValue}}" placeholder="请输入不少于15字的评论" class="_aa40698"/>
+        <button bindtap="$vEditor$tap" class="_aa40698">发布</button>
+    </view>
+    </view>

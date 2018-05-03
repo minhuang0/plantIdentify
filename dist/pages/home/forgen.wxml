@@ -1,0 +1,18 @@
+
+    <view class="_65c645e">
+        <block class="_65c645e" wx:for="{{lists}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+            
+    <view class="title _cbe9f31 _65c645e">{{item.categoryName}}</view>
+            
+    <block class="_bdfbe46 list _65c645e" wx:for="{{item.list}}" wx:for-index="$vCourse$index" wx:for-item="$vCourse$item" wx:key="$vCourse$index">
+        <view class="course _bdfbe46" data-id="{{$vCourse$item.id}}" bindtap="$vCourse$tap" data-com-index="{{index}}">
+            <image class="cover _bdfbe46" src="{{$vCourse$item.cover}}" mode="aspectFill"/>
+            <view class="content-view _bdfbe46">
+                <text class="title _bdfbe46">{{$vCourse$item.title}}</text>
+                <text class="description ellipsis _bdfbe46">{{$vCourse$item.description}}</text>
+                <text class="tag _bdfbe46">{{$vCourse$item.tag}}</text>
+            </view>
+        </view>
+    </block>
+        </block>
+    </view>

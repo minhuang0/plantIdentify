@@ -1,0 +1,86 @@
+<template>
+    <view>
+        <v-swper :alldata.sync='banners' @click.user='selectSwiper'></v-swper>
+        <v-title1 title='专题分类'></v-title1>
+        <v-h-scroll class='categories' :alldata.sync='categories' @click.user='selectCategory'></v-h-scroll>
+        <v-title2 title='今日推荐'></v-title2>
+        <v-list class="list" :list.sync='posts' @itemClick.user="selectList"></v-list>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import swperComponent from '@/components/swper'
+    import titleComponent from '@/components/title'
+    import hScrollComponent from '@/components/horizontal-scroll'
+    import listComponent from '@/components/list'
+
+    const categoryCovers = [
+        'https://modao.cc/uploads3/images/992/9926261/raw_1496282368.png',
+        'https://modao.cc/uploads3/images/992/9926263/raw_1496282368.jpeg',
+        'https://modao.cc/uploads3/images/992/9926265/raw_1496282369.png',
+        'https://modao.cc/uploads3/images/992/9926267/raw_1496282369.png'
+    ]
+
+    export default class Index extends wepy.component {
+        props = {
+            homeData: Object
+        }
+        components = {
+            'v-swper': swperComponent,
+            'v-title1': titleComponent,
+            'v-title2': titleComponent,
+            'v-h-scroll': hScrollComponent,
+            'v-list': listComponent
+        }
+        computed = {
+            banners () {
+                return this.homeData.banners.posts
+            },
+            categories () {
+                return this.homeData.recommends.children.map((item, idx) => {
+                    return {
+                        id: item.id,
+                        title: item.name,
+                        cover: item.imgUrl || categoryCovers[idx]
+                    }
+                })
+            },
+            posts () {
+                return this.homeData.posts.data.map(item => {
+                    const tag = (item.topics && item.topics[0] && item.topics[0].name) || ''
+                    return {
+                        id: item.id,
+                        tag: tag,
+                        cover: item.imgUrl,
+                        title: item.title
+                    }
+                })
+            }
+        }
+
+        methods = {
+            selectSwiper(e) {
+                wepy.navigateTo({
+                    url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+                })
+            },
+            selectList(e) {
+                wepy.navigateTo({
+                    url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+                })
+            },
+            selectCategory(e) {
+                wepy.navigateTo({
+                    url: `../../pages/list/index?id=${e.currentTarget.dataset.id}`
+                })
+            }
+        }
+    }
+</script>
+
+<style lang='scss' scoped>
+    .categories, .list {
+      background-color: #f8f8f8;
+    }
+</style>

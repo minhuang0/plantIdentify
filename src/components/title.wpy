@@ -1,0 +1,32 @@
+<template>
+    <view class="title">{{title}}</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            title: {}
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .title {
+        padding: 10px;
+        position: relative;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #fff;
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: #f4f4f4;
+        }
+    }
+</style>

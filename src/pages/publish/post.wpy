@@ -1,0 +1,138 @@
+<template>
+    <!--logs.wxml-->
+    <view class="container">
+        <view class="page__bd">
+            <view class="weui-toptips weui-toptips_warn" wx:if="{{tips.show}}">{{tips.text}}</view>
+            <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell">
+                    <view class="weui-cell__bd">
+                        <textarea class="weui-textarea" placeholder="您想说的话!" style="height: 3.3em" bindinput="bindCommentInput" value="{{content}}"/>
+                    </view>
+                </view>
+                <view class="weui-cell">
+                    <view class="weui-cell__bd">
+                        <view class="weui-uploader">
+                            <view class="weui-uploader__bd">
+                                <view class="weui-uploader__files" id="uploaderFiles">
+                                    <repeat for="{{files}}" key="index" index="index" item="item">
+                                        <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                                            <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                                        </view>
+                                    </repeat>
+                                </view>
+                                <view class="weui-uploader__input-box">
+                                    <view class="weui-uploader__input" bindtap="chooseMomentImage"></view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-btn-area">
+                <button class="weui-btn" type="primary" bindtap="confirmMoment">发表</button>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { uploadFile, chooseImage, postFetch } from '@/modules/common/fetch'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '发表朋友圈'
+        }
+
+        data = {
+            tips: {
+                show: false,
+                text: ''
+            },
+            content: '',
+            files: [],
+            images: []
+        }
+
+        methods = {
+        }
+        async chooseMomentImage(e) {
+            if (this.files.length >= 9) {
+                this.tips.text = '最大上传9张图片'
+                this.showTopTips()
+                return
+            }
+            const imageFilePath = await chooseImage().then(res => {
+                return res.tempFilePaths[0]
+            })
+            uploadFile('/circles/img/upload', imageFilePath).then(imageUrl => {
+                this.files = this.files.concat(imageFilePath)
+                this.images = this.images.concat(imageUrl)
+                this.$apply()
+            })
+        }
+        bindCommentInput (e) {
+            this.content = e.detail.value
+        }
+
+        previewImage(e) {
+            wepy.previewImage({
+                current: e.currentTarget.id, // 当前显示图片的http链接
+                urls: this.files // 需要预览的图片http链接列表
+            })
+        }
+
+        async confirmMoment () {
+            const self = this
+            if (this.validateData()) {
+                await postFetch('/circles', {
+                    data: {
+                        content: this.content,
+                        circle_imgs: this.images
+                    }
+                }).then(() => {
+                    wepy.showToast({
+                        title: '发表成功',
+                        icon: 'success',
+                        duration: 1000
+                    })
+                    self.resetData()
+                })
+            }
+        }
+
+        resetData () {
+            this.files = []
+            this.content = ''
+            this.images = []
+            this.$apply()
+        }
+        showTopTips() {
+            this.tips.show = true
+            setTimeout(() => {
+                this.tips.show = false
+                this.$apply()
+            }, 1000)
+        }
+        validateData () {
+            if (this.content === '' && this.images.length === 0) {
+                this.tips.text = '请上传图片和正文'
+                this.showTopTips()
+                return false
+            }
+            return true
+        }
+        onLoad() {
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .page__bd {
+      width: 100%;
+    }
+
+    .page__bd .weui-cells {
+      width: 100%;
+    }
+</style>

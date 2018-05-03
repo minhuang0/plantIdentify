@@ -1,0 +1,61 @@
+<template>
+    <view class="edit">
+        <input confirm-type="完成" bindinput="bindInput" value="{{inputValue}}" placeholder="请输入不少于15字的评论"/>
+        <button @tap="tap">发布</button>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            inputValue: {
+                type: String,
+                default: '',
+                twoWay: true
+            }
+        }
+        methods = {
+            tap (e) {
+                this.$emit('click', this.inputValue)
+            },
+            bindInput (e) {
+                this.$parent.inputValue = e.detail.value
+                this.$parent.$apply()
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .edit {
+        position: relative;
+        width:100%;
+        height:100rpx;
+        background: #fff;
+        left: 0;
+        right: 0;
+        height: 70rpx;
+        bottom: 0;
+        border: 1px;
+        padding: 25rpx 0;
+        input {
+            position: absolute;
+            left: 15rpx;
+            right: 155rpx;
+            height: 46rpx;
+            font-size: 14px;
+            border: 1rpx solid #eee;
+            padding: 10rpx 20rpx;
+        }
+        button {
+            position: absolute;
+            border-radius: 0rpx;
+            right: 15rpx;
+            height: 70rpx;
+            line-height: 70rpx;
+            background: #fff;
+        }
+    }
+</style>

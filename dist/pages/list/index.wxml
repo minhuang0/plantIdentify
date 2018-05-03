@@ -1,0 +1,18 @@
+
+    <view>
+        
+    <view class="title _cbe9f31">{{$vTitle$title}}</view>
+        
+    <view class="list _5b13789 list">
+        <block class="_5b13789" wx:for="{{$vList$list}}" wx:for-index="$vList$index" wx:for-item="$vList$item" wx:key="$vList$index">
+            
+    <view class="recommend _babbf7e _5b13789" data-id="{{$vList$item.id}}" bindtap="$vList$vItem$tap" data-com-index="{{$vList$index}}">
+        <view class="cover _babbf7e">
+            <image class="cover-img _babbf7e" src="{{$vList$item.cover}}" mode="aspectFill" lazy-load="true"/>
+            <text class="recomment-title _babbf7e">{{$vList$item.title}}</text>
+            <text class="tag _babbf7e">{{$vList$item.tag}}</text>
+        </view>
+    </view>
+        </block>
+    </view>
+    </view>

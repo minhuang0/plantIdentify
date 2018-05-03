@@ -1,0 +1,77 @@
+<template>
+    <view class='weui-navbar'>
+        <block wx:for='{{alldata}}' wx:key='{{index}}'>
+            <view id='{{index}}' class="weui-navbar__item" :class="{'weui-bar__item_on': activeIndex == index}" bindtap='tabClick'>
+                <view class='weui-navbar__title'>{{item.title}}</view>
+            </view>
+        </block>
+        <view class='weui-navbar__slider' style='left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);'></view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            alldata: {},
+            sliderWidth: {
+                default: 93.75 // 需要设置slider的宽度，用于计算中间位置
+            },
+            activeIndex: {
+                default: 0
+            }
+        }
+
+        data = {
+            sliderOffset: 0,
+            sliderLeft: 0
+        }
+
+        methods = {
+            tabClick(e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.$emit('changeActiveIndex', e.currentTarget.id)
+            }
+        }
+
+        onLoad() {
+            const that = this
+            wepy.getSystemInfo({
+                success(res) {
+                    that.sliderLeft = (res.windowWidth / that.alldata.length - that.sliderWidth) / 2
+                    that.sliderOffset = res.windowWidth / that.alldata.length * that.activeIndex
+                }
+            })
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .weui-navbar {
+      position: relative;
+      background-color: white;
+      border-bottom: 1rpx solid #f4f4f4;
+      .weui-navbar__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 80rpx;
+        padding: 0;
+        .weui-navbar__title {
+          line-height: 80rpx;
+          flex: 1;
+          color: #333;
+          font-size: 14px;
+        }
+      }
+      .weui-bar__item_on .weui-navbar__title {
+        color: #00b600;
+      }
+      .weui-navbar__slider {
+        background-color: #00b600;
+        width: 96px;
+      }
+    }
+</style>

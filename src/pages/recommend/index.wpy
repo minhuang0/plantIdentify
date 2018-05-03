@@ -1,0 +1,227 @@
+<template>
+    <import src='../../libs/wxParse/wxParse.wxml' />
+    <view class='recommend'>
+        <view>
+            <view class='header l-c-c'>
+                <view class='l-c'>
+                    <image class='head-img' src='{{userInfo.avatarUrl}}' mode='aspectFill' />
+                    <text class='name'>{{userInfo.nickName}}</text>
+                </view>
+                <view class='l-c right'>
+                    <view class='l-c' @tap="toggleUpvote">
+                        <view class="iconfont icon icon-praise"></view>
+                        <text>{{item.upvoteNum}}</text>
+                    </view>
+                    <view class="l-c">
+                        <view class="iconfont icon icon-message_fill"></view>
+                        <text>{{item.commentsNum}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="description">
+                <view class="title">{{item.title}}</view>
+                <view class="category">{{tags}}</view>
+            </view>
+            <view class="content">
+                <template is="wxParse" data="{{wxParseData: article.nodes}}" />
+            </view>
+            <v-comments :comments.sync="comments"></v-comments>
+            <v-editor @click.user="comment" :inputValue.sync="inputValue"></v-editor>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import WxParse from '../../libs/wxParse/wxParse.js'
+    import { getFetch, postFetch } from '@/modules/common/fetch'
+    import Editor from '@/components/editor'
+    import Comments from '@/components/comments'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '文章'
+        }
+        components = {
+            'v-editor': Editor,
+            'v-comments': Comments
+        }
+        data = {
+            inputValue: '',
+            item: {
+                tags: []
+            },
+            comments: [],
+            userInfo: {}
+        }
+        computed = {
+            tags () {
+                return this.item.tags.reduce((value, t) => {
+                    return `${value} #${t}#`
+                }, '')
+            }
+        }
+
+        methods = {
+            renderPost (post) {
+                post.targetsLength = post.targets.length
+                post.commentsLength = post.comments.length
+                post.tags = post.topics.map(t => t.name)
+                const userInfo = Object.assign({
+                    nickName: '小森',
+                    avatarUrl: 'http://static.htxq.net/UploadFiles/headimg/20160721142529242.jpg'
+                }, post.user || {})
+                return [post, userInfo]
+            },
+            comment (data) {
+                this.postComment(data)
+            },
+            toggleUpvote () {
+                if (this.item.hasZan) {
+                    return this.requestUpvote(false)
+                }
+                return this.requestUpvote(true)
+            }
+        }
+        async postComment (data) {
+            const userInfo = await this.$parent.getUserInfo()
+            const rsp = await postFetch('/posts/comment', {
+                data: {
+                    content: data,
+                    post_id: this.item.id
+                },
+                noAjax: true
+            }).then(() => {
+                this.comments.unshift({
+                    content: data,
+                    user: {
+                        avatarUrl: userInfo.avatarUrl,
+                        nickName: userInfo.nickName
+                    },
+                    created_at: new Date(),
+                    user_id: userInfo.nickName
+                })
+                this.inputValue = ''
+                this.$apply()
+            }).catch(() => {
+                wepy.showToast({
+                    title: '评论失败',
+                    icon: 'none',
+                    duration: 2000
+                })
+            })
+            console.log(rsp)
+        }
+        async requestUpvote (isUpVote) {
+            await getFetch(`/posts/${this.item.id}/${isUpVote ? 'zan' : 'unzan'}`, {
+                noAjax: true
+            }).then(() => {
+                this.item.hasZan = !this.item.hasZan
+                this.item.upvoteNum = this.item.hasZan ? this.item.upvoteNum + 1 : this.item.upvoteNum > 1 ? this.item.upvoteNum - 1 : 0
+                this.$apply()
+            })
+        }
+
+        async onLoad (options) {
+            const data = await getFetch(`/posts/${options.id || 26}`)
+            const renderData = this.methods.renderPost(data.post)
+            this.item = renderData[0]
+            this.item.upvoteNum = this.item.targets.length
+            this.item.commentsNum = this.item.comments.length
+            this.comments = this.item.comments
+            this.userInfo = renderData[1]
+            this.$apply()
+            WxParse.wxParse('article', 'html', this.item.content, this, 0)
+            wepy.setNavigationBarTitle({
+                title: this.item.title
+            })
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    @import "../../libs/wxParse/wxParse.scss";
+
+    .recommend {
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100rpx;
+        background-color: #fff;
+        z-index: 1;
+        color: #a4a4a4;
+        padding: 20rpx;
+        font-size: 12px;
+        justify-content: space-between;
+
+        .head-img {
+          height: 100rpx;
+          width: 100rpx;
+          border-radius: 50rpx;
+        }
+
+        .right > view {
+          margin-left: 20rpx;
+        }
+
+        .name {
+          padding: 0 20rpx;
+        }
+
+        .icon {
+          height: 40rpx;
+          width: 40rpx;
+        }
+      }
+
+      .description {
+        position: relative;
+        padding-bottom: 100rpx;
+        padding-top: 140rpx;
+        &::after {
+          content: "";
+          position: absolute;
+          background-color: #f8f8f8;
+          width: 100%;
+          left: 0;
+          height: 50rpx;
+          bottom: 0;
+        }
+        .title {
+          padding: 20rpx;
+          font-size: 20px;
+          text-align: center;
+        }
+        .category {
+          padding: 20rpx;
+          font-size: 14px;
+          text-align: center;
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            background-color: #a8a8a8;
+            width: 100rpx;
+            left: 50%;
+            height: 4rpx;
+            margin-left: -50rpx;
+            bottom: 0;
+          }
+        }
+      }
+      .content {
+        padding: 20rpx;
+      }
+    }
+
+    /** 图标 **/
+    .icon-like_fill {
+      color: red;
+    }
+    .icon-praise {
+      color: #000;
+    }
+
+</style>

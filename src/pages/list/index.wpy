@@ -1,0 +1,42 @@
+<template>
+    <view>
+        <v-title :title.sync='title'></v-title>
+        <v-list class="list" :list='list' @itemClick.user="selectList"></v-list>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import titleComponent from '@/components/title'
+    import listComponent from '@/components/list'
+    import { category, recommendList } from '@/modules/mockData'
+
+    export default class Index extends wepy.page {
+        data = {
+            list: recommendList,
+            title: ''
+        }
+
+        components = {
+            'v-title': titleComponent,
+            'v-list': listComponent
+        }
+
+        methods = {
+            selectList(e) {
+                wepy.navigateTo({
+                    url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+                })
+            }
+        }
+        onLoad(options) {
+            const currentCategory = category.filter((item) => {
+                return item.id === parseInt(options.id)
+            })
+            this.title = currentCategory[0].title
+            wepy.setNavigationBarTitle({
+                title: this.title
+            })
+        }
+    }
+</script>

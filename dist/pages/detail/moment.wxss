@@ -1,0 +1,4 @@
+@import "./../../components/comments.wxss";
+@import "./../../components/moment.wxss";
+@import "./../../components/editor.wxss";
+.me._178eff6{position:relative;width:100%}.me .comments._178eff6{padding-bottom:100rpx}.me .comments .comment._178eff6{margin:20rpx 30rpx;font-size:14px;color:#555555}.me .edit._178eff6{position:fixed;bottom:0}

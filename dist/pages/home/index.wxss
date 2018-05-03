@@ -1,0 +1,5 @@
+@import "./forgen.wxss";
+@import "./activity.wxss";
+@import "./recommend.wxss";
+@import "./../../components/navbar.wxss";
+.hidden._fc01642{display:none}

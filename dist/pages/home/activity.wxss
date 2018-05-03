@@ -1,0 +1,2 @@
+@import "./../../components/activity.wxss";
+.activities._5a62c46{position:relative;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;background-color:#f8f8f8}

@@ -1,0 +1,118 @@
+<template>
+    <view class="recommend" data-id="{{item.id}}" @tap="tap">
+        <view class="cover">
+            <image class="cover-img" src="{{item.cover}}" mode="aspectFill" lazy-load="true"></image>
+            <text class="recomment-title">{{item.title}}</text>
+            <text class="tag">{{item.tag}}</text>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            item: {}
+        }
+        methods = {
+            tap (e) {
+                this.$emit('click', e)
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .recommend {
+      position: relative;
+      margin-top: 10px;
+      background-color: #fff;
+      padding: 10px;
+
+      &::after {
+        content: '';
+        background: #f4f4f4;
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        bottom: 0;
+        left: 0;
+      }
+
+      .tag {
+        position: absolute;
+        right: -40rpx;
+        top: 20rpx;
+        transform: rotate(45deg);
+        transform-origin: center center;
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0 40rpx;
+        font-size: 10px;
+      }
+
+      .cover {
+        // margin-top: 10px;
+        border-radius: 10px;
+        position: relative;
+        width: 100%;
+        height: 320rpx;
+        overflow: hidden;
+
+        .cover-img {
+          width: 100%;
+        }
+
+        .recomment-title {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 5rpx 15rpx;
+          font-size: 14px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;
+        }
+      }
+
+      .title-view {
+        position: relative;
+        background-color: #fff;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &::after {
+          content: '';
+          background: #f4f4f4;
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          bottom: 0;
+          left: 0;
+        }
+      }
+
+      .content {
+        width: 100%;
+        color: #333;
+        background-color: #fff;
+        font-size: 12px;
+        line-height: 50rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+</style>

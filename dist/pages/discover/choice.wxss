@@ -1,0 +1,5 @@
+@import "./../../components/title.wxss";
+@import "./../../components/grid.wxss";
+@import "./../../components/baseTitle.wxss";
+@import "./../../components/text.wxss";
+.categories._141034e,.list._141034e{background-color:#f8f8f8}

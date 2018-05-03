@@ -1,0 +1,53 @@
+<template>
+    <view class="scroll-nav">
+        <repeat for="{{tabs}}" key="index" index="index" item="item">
+            <view class="item" :class="{active: activeIndex == index}" @tap="tap" data-id="{{index}}">{{item.title}}</view>
+        </repeat>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            tabs: {},
+            activeIndex: Number
+        }
+        methods = {
+            tap(e) {
+                this.$emit('click', e)
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .scroll-nav {
+      width: 100%;
+      height: 40rpx;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      font-size: 14px;
+      color: #8e908c;
+      .item {
+        display: inline-block;
+        width: 120rpx;
+        text-align: center;
+        line-height: 40rpx;
+      }
+      .active {
+        color: black;
+        background-color: #f4f4f4;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        bottom: 0;
+        left: 0;
+        background-color: #f4f4f4;
+      }
+    }
+</style>

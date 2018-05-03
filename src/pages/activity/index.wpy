@@ -1,0 +1,88 @@
+<template>
+    <view>
+        <import src="../../libs/wxParse/wxParse.wxml" />
+        <view class="activity">
+            <view>
+                <view class="header l-c-c">
+                    <image class="cover" src="{{item.imgUrl}}" mode="aspectFill" />
+                </view>
+                <view class="description">
+                    <view class="title">{{item.title}}</view>
+                    <view class="category">#{{item.description}}#</view>
+                </view>
+                <view class="content">
+                    <template is="wxParse" data="{{wxParseData: activity.nodes}}" />
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { activityDetails, icons } from '@/modules/mockData'
+    import WxParse from '../../libs/wxParse/wxParse.js'
+
+    export default class Index extends wepy.page {
+        data = {
+            item: activityDetails,
+            icons
+        }
+
+        methods = {
+        }
+        onLoad() {
+            WxParse.wxParse('activity', 'html', this.item.html, this, 0)
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    @import "../../libs/wxParse/wxParse.scss";
+    .activity {
+      .header .cover {
+        height: 400rpx;
+        width: 100%;
+      }
+
+      .description {
+        position: relative;
+        padding-bottom: 100rpx;
+        &::after {
+          content: "";
+          position: absolute;
+          background-color: #f8f8f8;
+          width: 100%;
+          left: 0;
+          height: 50rpx;
+          bottom: 0;
+        }
+
+        .title {
+          padding: 20rpx;
+          font-size: 20px;
+          text-align: center;
+        }
+
+        .category {
+          padding: 20rpx;
+          font-size: 14px;
+          text-align: center;
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            background-color: #a8a8a8;
+            width: 300rpx;
+            left: 50%;
+            height: 4rpx;
+            margin-left: -150rpx;
+            bottom: 0;
+          }
+        }
+      }
+      .content {
+        padding: 20rpx;
+      }
+    }
+</style>

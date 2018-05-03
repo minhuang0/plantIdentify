@@ -1,0 +1,2 @@
+@import "./../../components/course.wxss";
+@import "./../../components/title.wxss";

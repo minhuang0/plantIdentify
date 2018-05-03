@@ -1,0 +1,22 @@
+.l-c-c {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.l-c {
+    display: flex;
+    align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }

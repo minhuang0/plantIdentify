@@ -1,0 +1,127 @@
+<template>
+    <view class="me">
+        <view class="header">
+            <view class="cover">
+                <image src="http://www.90houqq.com/data/attachment/forum/201611/08/100416m0763pt026p33axz.jpg" />
+            </view>
+            <view class="header-content">
+                <text class="name">{{user.nickName}}</text>
+                <image class="img-head" src="{{user.avatarUrl}}"></image>
+            </view>
+        </view>
+        <view class="moments">
+            <repeat for="{{adapterMoments}}" key="index" index="index" item="item">
+                <v-moment :moment="item"></v-moment>
+            </repeat>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import momentComponent from '@/components/moment'
+    import { getFetch } from '@/modules/common/fetch'
+    import { paddingImg, timeTransform } from '@/modules/common/utils'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '用户信息'
+        }
+
+        components = {
+            'v-moment': momentComponent
+        }
+
+        computed = {
+            adapterMoments () {
+                const user = this.user
+                return this.moments.map(m => {
+                    return {
+                        id: m.id,
+                        avatar: user.avatarUrl,
+                        name: user.nickName,
+                        content: m.content,
+                        images: paddingImg(m.circle_imgs.map(i => i.imgUrl)),
+                        createTime: timeTransform(m.created_at),
+                        upvoteNum: m.targets_count,
+                        commentsNum: m.comments_count
+                    }
+                })
+            }
+        }
+
+        data = {
+            moments: [],
+            user: {}
+        }
+        methods = {
+        }
+        async fetchData (id) {
+            const response = await getFetch(`/user/${id}`)
+            this.moments = response.circles
+            this.user = response.user
+        }
+        async onLoad (options) {
+            await this.fetchData(options.id)
+            this.$apply()
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .me {
+      position: relative;
+      width: 100%;
+
+      .header {
+        position: relative;
+        &::after {
+          content: "";
+          background: #eee;
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          bottom: 0;
+          left: 0;
+        }
+        .header-content {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          .name {
+            color: #fff;
+            position: absolute;
+            font-size: 14px;
+            right: 140rpx;
+            bottom: 10rpx;
+          }
+          .img-head {
+            position: absolute;
+            right: 20rpx;
+            bottom: -50rpx;
+            background-color: #fff;
+            border: 1rpx solid #eee;
+            padding: 5rpx;
+            height: 100rpx;
+            width: 100rpx;
+          }
+        }
+      }
+      .cover {
+        width: 100%;
+        height: 320rpx;
+        overflow: hidden;
+        background-color: black;
+        text-aligin: center;
+        image {
+          width: 100%;
+        }
+      }
+      .moments {
+          margin-top: 65rpx;
+      }
+    }
+</style>

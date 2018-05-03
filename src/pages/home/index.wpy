@@ -1,0 +1,92 @@
+<template>
+    <view>
+        <v-navbar :alldata='tabs' :activeIndex.sync='activeIndex' :sliderWidth='sliderWidth' @changeActiveIndex.user='changeActiveIndex'></v-navbar>
+        <v-recommend :class='{ hidden: activeIndex !== 0}' :homeData.sync="homeData"></v-recommend>
+        <v-forgen :class='{ hidden: activeIndex !== 1}' :forgenData.sync="forgenData"></v-forgen>
+        <v-activities :class='{ hidden: activeIndex !== 2}' :activityData.sync="activityData"></v-activities>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import navbarComponent from '@/components/navbar'
+    import { getFetch } from '@/modules/common/fetch'
+    import recommendComponent from './recommend'
+    import activitiesComponent from './activity'
+    import forgenComponent from './forgen'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '森林风'
+        }
+
+        components = {
+            'v-navbar': navbarComponent,
+            'v-recommend': recommendComponent,
+            'v-activities': activitiesComponent,
+            'v-forgen': forgenComponent
+        }
+
+        data = {
+            /* 顶部分类 */
+            tabs: [{
+                title: '推荐'
+            }, {
+                title: '森究堂'
+            }, {
+                title: '活动'
+            }],
+            activeIndex: 0,
+            sliderWidth: 93.75,
+            userInfo: {},
+            homeData: {
+                posts: {
+                    data: []
+                },
+                banners: {
+                    posts: []
+                },
+                recommends: {
+                    children: []
+                }
+            },
+            forgenData: [],
+            activityData: []
+        }
+
+        changeActiveIndex(activeIndex) {
+            this.activeIndex = parseInt(activeIndex)
+        }
+        async updateSenJiuTang () {
+            const response = await getFetch('/posts/senJiuTang', { noAjax: true })
+            this.forgenData = response.topics || []
+        }
+        async updateHomeData () {
+            this.homeData = await getFetch('/posts')
+        }
+        async updateActivity () {
+            const response = await getFetch('/posts/activity')
+            this.activityData = response.topics && response.topics.posts
+        }
+
+        methods = {
+            changeActiveIndex(activeIndex) {
+                this.activeIndex = parseInt(activeIndex)
+            }
+        }
+
+        async onShow() {
+            await this.$parent.getUserInfo()
+            await this.updateHomeData()
+            await this.updateActivity()
+            await this.updateSenJiuTang()
+            this.$apply()
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .hidden {
+      display: none;
+    }
+</style>

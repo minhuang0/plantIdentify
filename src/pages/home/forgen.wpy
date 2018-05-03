@@ -1,0 +1,61 @@
+<template>
+    <view>
+        <repeat for="{{lists}}" key="index" index="index" item="item">
+            <v-title :title.sync='item.categoryName'></v-title>
+            <v-course class="list" :type.sync='item.type' :list.sync='item.list' @click.user="selectList"></v-course>
+        </repeat>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import titleComponent from '@/components/title'
+    import courseComponent from '@/components/course'
+    import { maxLength } from '@/modules/common/utils'
+
+    export default class Index extends wepy.component {
+        props = {
+            forgenData: Array
+        }
+
+        components = {
+            'v-title': titleComponent,
+            'v-course': courseComponent
+        }
+
+        computed = {
+            lists () {
+                return this.forgenData.map(item => {
+                    return {
+                        id: item.id,
+                        categoryName: item.name,
+                        list: item.posts.map(i => {
+                            return {
+                                id: i.id,
+                                tag: i.topics.reduce((value, t) => {
+                                    return `${value} #${t.name}#`
+                                }, ''),
+                                title: i.title,
+                                cover: i.imgUrl,
+                                description: maxLength(i.description)
+                            }
+                        })
+                    }
+                })
+            }
+        }
+
+        methods = {
+            selectList(e) {
+                wepy.navigateTo({
+                    url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+                })
+            }
+        }
+    }
+</script>
+
+<style lang='scss' scoped>
+    .list {
+    }
+</style>

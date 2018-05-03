@@ -1,0 +1,96 @@
+<template>
+    <view class="content">
+        <image class="bg" src="../../modules/images/welcome_bg.jpg"></image>
+        <view class="main">
+            <view class="header">
+                <image class="icon" src="../../modules/images/icon.png" mode="aspectFit"></image>
+                <image class="name" src="../../modules/images/name.png" mode="aspectFit"></image>
+            </view>
+            <view class="description">文字描述文字描述文字描述文字描述文字描述文字描述文字描述</view>
+            <image class="cover" src="../../modules/images/cover.png"></image>
+            <view class="start-identify" @tap="goIdentifyPage">
+                <view class="btn">开始识别</view>
+            </view>
+            <view class="copyright">中国林业出版社所有</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '花瓣'
+        }
+        methods = {
+            goIdentifyPage () {
+                wepy.navigateTo({
+                    url: `./index`
+                })
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .content, .bg {
+        width: 100%;
+        height: 100%;
+    }
+    .bg {
+        top: 0;
+    }
+    .main {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        .header {
+            width: 100%;
+            margin-top: 160rpx;
+            text-align: center;
+            .icon {
+                width: 80rpx;
+                height: 80rpx;
+            }
+            .name {
+                margin-left: 15rpx;
+                width: 180rpx;
+                height: 80rpx;
+            }
+        }
+        .description {
+            font-size: 15px;
+            color: #737373;
+            margin: 30rpx 30rpx 0;
+            text-align: center;
+        }
+        .cover {
+            width: 320rpx;
+            height: 500rpx;
+        }
+        .start-identify {
+            text-align: center;
+            margin-top: 40rpx;
+            .btn {
+                display: inline-block;
+                padding: 10rpx;
+                width: 170rpx;
+                color: #fff;
+                font-size: 16px;
+                background-color: #9BA621;
+                border-radius: 5px;
+            }
+        }
+        .copyright {
+            position: absolute;
+            width: 100%;
+            bottom: 50rpx;
+            font-size: 15px;
+            text-align: center;
+        }
+    }
+</style>

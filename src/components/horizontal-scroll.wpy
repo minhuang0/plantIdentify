@@ -1,0 +1,69 @@
+<template>
+    <view class="list">
+        <block wx:for="{{alldata}}" wx:key="{{index}}">
+            <view class="item" data-id="{{item.id}}" @tap="tap">
+                <image class="cover" src="{{item.cover}}" mode="aspectFill"></image>
+                <text class="title">{{item.title}}</text>
+            </view>
+        </block>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            alldata: {}
+        }
+
+        methods = {
+            tap(e) {
+                this.$emit('click', e)
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+
+.list {
+    position: relative;
+    padding: 10rpx;
+    height: 220rpx;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    .item {
+        display: inline-block;
+        margin: 10rpx;
+        height: 200rpx;
+        width: 200rpx;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+
+        .cover{
+            height:200rpx;
+            width:200rpx;
+            overflow: hidden;
+        }
+
+        .title{
+            position: absolute;
+            top: 0;
+            left: 0;
+            top: 50%;
+            color: white;
+            height: 20px;
+            margin-top: -10px;
+            line-height: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            background-color: transparent;
+        }
+    }
+}
+</style>

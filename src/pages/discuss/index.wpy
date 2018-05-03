@@ -1,0 +1,77 @@
+<template>
+    <view class="moments">
+        <v-base-title class="title" :leftText.sync="title"></v-base-title>
+        <!-- <repeat for="{{adapterPosts}}" key="index" index="index" item="item"> -->
+        <v-course class="list" :list.sync='adapterPosts' @click.user="selectList"></v-course>
+        <!-- </repeat> -->
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getFetch } from '@/modules/common/fetch'
+    import { maxLength } from '@/modules/common/utils'
+    import baseTitleComponent from '@/components/baseTitle'
+    import courseComponent from '@/components/course'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '热门话题'
+        }
+
+        components = {
+            'v-base-title': baseTitleComponent,
+            'v-course': courseComponent
+        }
+
+        data = {
+            title: '',
+            posts: []
+        }
+
+        computed = {
+            adapterPosts () {
+                return this.posts.map(i => {
+                    return {
+                        id: i.id,
+                        tag: i.topics.reduce((value, t) => {
+                            return `${value} #${t.name}#`
+                        }, ''),
+                        title: i.title,
+                        cover: i.imgUrl,
+                        description: maxLength(i.description)
+                    }
+                })
+            }
+        }
+        async fetchData (id) {
+            const rsp = await getFetch(`/topic/index/${14 || id}`)
+            this.posts = rsp.posts
+        }
+        async onLoad(options) {
+            this.title = options.text ? `热门话题: #${options.text}#` : '#更多热门话题#'
+            await this.fetchData(options.id)
+            this.$apply()
+        }
+        selectList (e) {
+            wepy.navigateTo({
+                url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+            })
+        }
+    }
+</script>
+
+<style lang='scss' scoped>
+    .moments {
+      position: relative;
+      display: flex;
+      padding-bottom: 10rpx;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      background-color: #f8f8f8;
+      background-color: #f8f8f8;
+      .title {
+          color: #fd7e2b;
+      }
+    }
+</style>

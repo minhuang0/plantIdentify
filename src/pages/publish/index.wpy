@@ -1,0 +1,217 @@
+<template>
+    <view class="content">
+        <camera device-position="back" flash="off" binderror="error" class="camera">
+            <cover-view class="shadow">
+                <cover-view class="top"></cover-view>
+                <cover-view class="center-view">
+                    <cover-view class="left"></cover-view>
+                    <cover-view class="center"></cover-view>
+                    <cover-view class="right"></cover-view>
+                </cover-view>
+                <cover-view class="bottom"></cover-view>
+            </cover-view>
+            <cover-view class="options">
+                <cover-view class="tip suggest">请将内容放与框内拍摄</cover-view>
+                <cover-view class="take-photo" bindtap="takePhoto">
+                    <cover-view class="round">
+                        <cover-image class="camera" src="../../modules/images/camera_white.png"></cover-image>
+                    </cover-view>
+                </cover-view>
+                <cover-view class="album" bindtap="getImageFromAlbum">
+                    <cover-image src="../../modules/images/photo_gallery.png"></cover-image>
+                    <cover-view class="tip">相册</cover-view>
+                </cover-view>
+            </cover-view>
+        </camera>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { chooseImage } from '@/modules/common/fetch'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '花瓣'
+        }
+        data = {
+            cctx: {
+                takePhoto () {}
+            }
+        }
+        async onReady (res) {
+            wepy.hideShareMenu()
+            if (wepy.createCameraContext()) {
+                this.cctx = wepy.createCameraContext('myCamera')
+            } else { // 如果希望用户在最新版本的客户端上体验您的小程序，可以这样子提示
+                wepy.showModal({
+                    title: '提示',
+                    content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+                })
+            }
+        }
+        openShow (image, isFromAlbum = false) {
+            wepy.navigateTo({
+                url: `./show?image=${encodeURIComponent(image)}&isFromAlbum=${isFromAlbum}`
+            })
+            this.$apply()
+        }
+        async takePhoto() {
+            this.cctx.takePhoto({
+                quality: 'low',
+                success: (res) => {
+                    wepy.showLoading({ title: '识别中', mask: true })
+                    this.openShow(res.tempImagePath)
+                }
+            })
+        }
+        async getImageFromAlbum (e) {
+            const imageFilePath = await chooseImage({
+                sourceType: ['album']
+            }).then(res => {
+                return res.tempFilePaths[0]
+            })
+            wepy.showLoading({ title: '识别中', mask: true })
+            this.openShow(imageFilePath, true)
+        }
+        onLoad (options) {
+            if (options.shareId) {
+                wepy.navigateTo({
+                    url: `./show?shareId=${options.shareId}`
+                })
+            }
+        }
+        error (e) {
+            wepy.hideLoading()
+            wepy.showToast({
+                title: '网络异常',
+                icon: 'none',
+                duration: 2000
+            })
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    page {
+        height: 100%;
+        width: 100%;
+    }
+    .content {
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+    .camera {
+        height: 100%;
+        width: 100%;
+        .shadow {
+            z-index: 2;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: transparent;
+            cover-view {
+                // position: absolute;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                outline: none;
+            }
+            .top {
+                top: 0;
+                height: 10%;
+                width: 100%;
+            }
+            .center-view {
+                height: 400rpx;
+                // display: flex;
+                background: transparent;
+            }
+            .left, .right, .center {
+                display: inline-block;
+                height: 400rpx;
+                // top: 25%;
+            }
+            // .center { }
+            .left {
+                // left: 0;
+                // background-color: red;
+                width: 50%;
+                margin-left: -200rpx;
+            }
+            .right {
+                // background-color: rosybrown;
+                // right: 0;
+                width: 50%;
+                // margin-left: 200rpx;
+            }
+            .bottom {
+                bottom: 0;
+                width: 100%;
+                height: 90%;
+                margin-bottom: -400rpx;
+            }
+            .center  {
+                // background-color: yellow;
+                // flex: 1;
+                width: 400rpx;
+                // position: absolute;
+                // left: 50%;
+                // margin-left: -200rpx;
+                // width: 400rpx;
+                background: transparent;
+            }
+        }
+    }
+    .options {
+        z-index: 3;
+        position: absolute;
+        top: 10%;
+        height: 80%;
+        width: 100%;
+        .suggest {
+            margin-top: 450rpx;
+        }
+        .tip {
+            color: #fff;
+            font-size: 12px;
+            text-align: center;
+        }
+        .take-photo {
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 120rpx;
+            height: 120rpx;
+            left: 50%;
+            margin-left: -70rpx;
+            border-radius: 70rpx;
+            border: 10rpx solid #bbbbbb;
+            background: transparent;
+            .round {
+                height: 100rpx;
+                width: 100rpx;
+                border-radius: 60rpx;
+                background: #a7bb33;
+                .camera {
+                    margin: 20rpx;
+                    width: 60rpx;
+                    height: 60rpx;
+                }
+            }
+        }
+        .album {
+            position: absolute;
+            bottom: 0rpx;
+            width: 60rpx;
+            text-align: center;
+            right: 24%;
+            cover-image {
+                width: 100%;
+            }
+        }
+    }
+</style>

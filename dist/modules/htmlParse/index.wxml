@@ -1,0 +1,5 @@
+
+    <import src="../../libs/wxParse/wxParse.wxml"/>
+    <block  wx:for="{{htmlParserTpl.nodes}}" wx:key="{{index}}">
+        <template is="wxParse" data="{{item}}"/>
+    </block>

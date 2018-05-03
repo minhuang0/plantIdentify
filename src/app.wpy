@@ -1,0 +1,97 @@
+<style lang="scss">
+    @import './modules/styles/index.scss';
+</style>
+
+<script>
+    import wepy from 'wepy'
+    import 'wepy-async-function'
+    import { postFetch } from '@/modules/common/fetch'
+
+    export default class extends wepy.app {
+        config = {
+            pages: [
+                'pages/publish/index',
+                'pages/publish/welcome',
+                'pages/publish/show'
+            ],
+            window: {
+                backgroundTextStyle: 'light',
+                navigationBarBackgroundColor: '#fff',
+                navigationBarTitleText: 'WeChat',
+                navigationBarTextStyle: 'black'
+            }
+        }
+
+        globalData = {
+            userInfo: null
+        }
+
+        constructor() {
+            super()
+            this.use('requestfix')
+        }
+
+        onLaunch() {
+            // this.getUserInfo()
+        }
+
+        sleep(s) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('promise resolved')
+                }, s * 1000)
+            })
+        }
+
+        async getUserInfo () {
+            const that = this
+            return new Promise((resolve, reject) => {
+                if (that.globalData.userInfo) {
+                    return resolve(that.globalData.userInfo)
+                }
+                wepy.login({
+                    success(res) {
+                        // 获取openId
+                        wepy.request({
+                            url: 'https://api.weixin.qq.com/sns/jscode2session',
+                            data: {
+                                appid: 'wx074fc89a63291f58', // 小程序唯一标识
+                                secret: 'c52454ed68690c8a35190b941c6c298b', // 小程序的 app secret
+                                grant_type: 'authorization_code',
+                                js_code: res.code
+                            },
+                            method: 'GET',
+                            header: { 'content-type': 'application/json' },
+                            success (openIdRes) {
+                                console.info('登录成功返回的openId：' + openIdRes.data.openid)
+                                // 判断openId是否获取成功
+                                if (openIdRes.data.openid != null && openIdRes.data.openid !== undefined) {
+                                    // 有一点需要注意 询问用户 是否授权 那提示 是这API发出的
+                                    wepy.getUserInfo({
+                                        success: function (res) {
+                                            that.globalData.userInfo = res.userInfo
+                                            that.globalData.userInfo.openId = openIdRes.data.openid
+                                            return postFetch('/loginWeChat', { noAjax: true, data: this.globalData.userInfo }).then(userInfo => {
+                                                this.globalData.userInfo.id = userInfo.user.id
+                                                resolve(that.globalData.userInfo)
+                                            })
+                                            // 自定义操作
+                                            // 绑定数据，渲染页面
+                                        },
+                                        fail: function (failData) {
+                                            console.info('用户拒绝授权')
+                                            reject(failData)
+                                        }
+                                    })
+                                } else {
+                                    console.info('获取用户openId失败')
+                                    reject(openIdRes)
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+        }
+    }
+</script>

@@ -1,0 +1,35 @@
+
+    <!--logs.wxml-->
+    <view class="container _40cf51d">
+        <view class="page__bd _40cf51d">
+            <view class="weui-toptips weui-toptips_warn _40cf51d"  wx:if="{{tips.show}}">{{tips.text}}</view>
+            <view class="weui-cells weui-cells_after-title _40cf51d">
+                <view class="weui-cell _40cf51d">
+                    <view class="weui-cell__bd _40cf51d">
+                        <textarea class="weui-textarea _40cf51d" placeholder="您想说的话!" style="height: 3.3em" bindinput="bindCommentInput" value="{{content}}"/>
+                    </view>
+                </view>
+                <view class="weui-cell _40cf51d">
+                    <view class="weui-cell__bd _40cf51d">
+                        <view class="weui-uploader _40cf51d">
+                            <view class="weui-uploader__bd _40cf51d">
+                                <view class="weui-uploader__files _40cf51d" id="uploaderFiles">
+                                    <block class="_40cf51d" wx:for="{{files}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                                        <view class="weui-uploader__file _40cf51d" bindtap="previewImage" id="{{item}}">
+                                            <image class="weui-uploader__img _40cf51d" src="{{item}}" mode="aspectFill"/>
+                                        </view>
+                                    </block>
+                                </view>
+                                <view class="weui-uploader__input-box _40cf51d">
+                                    <view class="weui-uploader__input _40cf51d" bindtap="chooseMomentImage"/>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-btn-area _40cf51d">
+                <button class="weui-btn _40cf51d" type="primary" bindtap="confirmMoment">发表</button>
+            </view>
+        </view>
+    </view>

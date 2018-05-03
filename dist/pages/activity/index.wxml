@@ -1,0 +1,18 @@
+
+    <view class="_82ac98f">
+        <import src="../../libs/wxParse/wxParse.wxml" class="_82ac98f"/>
+        <view class="activity _82ac98f">
+            <view class="_82ac98f">
+                <view class="header l-c-c _82ac98f">
+                    <image class="cover _82ac98f" src="{{item.imgUrl}}" mode="aspectFill"/>
+                </view>
+                <view class="description _82ac98f">
+                    <view class="title _82ac98f">{{item.title}}</view>
+                    <view class="category _82ac98f">#{{item.description}}#</view>
+                </view>
+                <view class="content _82ac98f">
+                    <template is="wxParse" data="{{wxParseData: activity.nodes}}" class="_82ac98f"/>
+                </view>
+            </view>
+        </view>
+    </view>

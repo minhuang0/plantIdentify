@@ -1,0 +1,37 @@
+
+    <view class="content _ea5f74e">
+        <camera device-position="back" flash="off" binderror="error" class="camera _ea5f74e">
+            <cover-view class="image-cover _ea5f74e">
+                <cover-image class="img _ea5f74e" src="{{image}}" mode="aspectFill" lazy-load="true"/>
+                <cover-image class="file-img _ea5f74e" src="{{fileImage}}" mode="aspectFill" lazy-load="true"/>
+            </cover-view>
+            <cover-view class="shadow _ea5f74e">
+                <cover-view class="top _ea5f74e"/>
+                <cover-view class="left _ea5f74e"/>
+                <cover-view class="center _ea5f74e"/>
+                <cover-view class="right _ea5f74e"/>
+                <cover-view class="bottom _ea5f74e"/>
+            </cover-view>
+            <cover-view class="options _ea5f74e"  wx:if="{{!showResult}}">
+                <cover-view class="take-photo _ea5f74e" bindtap="takePhoto">
+                    <cover-view class="round _ea5f74e"/>
+                </cover-view>
+                <cover-view class="album _ea5f74e" bindtap="getImageFromAlbum">
+                    <cover-image src="../../modules/images/photo_gallery.png" class="_ea5f74e"/>
+                </cover-view>
+            </cover-view>
+            <cover-view  wx:if="{{showResult}}" class="result _ea5f74e" bindtap="cancle">
+                <cover-view class="list _ea5f74e">
+                    <block wx:for="{{formatResult}}" wx:key="{{index}}" class="_ea5f74e">
+                        <cover-view class="item _ea5f74e">
+                            <cover-view class="name _ea5f74e">{{item.name}}</cover-view>
+                            <cover-view class="_ea5f74e">{{item.score}}</cover-view>
+                        </cover-view>
+                    </block>
+                </cover-view>
+                <!-- <cover-view class="cancle icon iconfont icon-cancel"></cover-view> -->
+            </cover-view>
+        </camera>
+        <canvas canvas-id="canvas" style="width: 375px; height: 667px;" class="_ea5f74e"/>
+        <image bindload="loadimage" src="{{image}}" class="_ea5f74e"/>
+    </view>

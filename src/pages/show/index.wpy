@@ -1,0 +1,39 @@
+<template>
+    <view>
+        <v-moments :momentsData.sync="momentsData"></v-moments>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import momentsComponent from '../discover/moments'
+    import { getFetch } from '@/modules/common/fetch'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '圈子'
+        }
+
+        components = {
+            'v-moments': momentsComponent
+        }
+
+        data = {
+            momentsData: []
+        }
+        async updateData () {
+            const rsp = await getFetch('/circles/circleList', { noAjax: true })
+            this.momentsData = rsp.circles && rsp.circles.data
+        }
+        async onShow () {
+            await this.updateData()
+            this.$apply()
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .empty {
+        height: 200rpx;
+    }
+</style>

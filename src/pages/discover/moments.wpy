@@ -1,0 +1,79 @@
+<template>
+    <view class="moments">
+        <repeat for="{{moments}}" key="index" index="index" item="item">
+            <v-moment :moment.sync="item" :id="index"></v-moment>
+        </repeat>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import momentComponent from '@/components/moment'
+    import { timeTransform, paddingImg } from '@/modules/common/utils'
+
+    export default class Index extends wepy.component {
+        props = {
+            momentsData: Array
+        }
+        components = {
+            'v-moment': momentComponent
+        }
+
+        computed = {
+            moments () {
+                return this.momentsData.map(m => {
+                    const user = m.user || {}
+                    return {
+                        id: m.id,
+                        user_id: m.user_id,
+                        avatar: user.avatarUrl,
+                        name: user.nickName,
+                        content: m.content || '',
+                        images: paddingImg(m.circle_imgs.map(i => i.imgUrl)),
+                        createTime: timeTransform(m.created_at),
+                        upvoteNum: m.targets_count,
+                        commentsNum: m.comments_count
+                    }
+                })
+            }
+        }
+
+        data = {
+            /* 顶部分类 */
+            // tabs: [{
+            //     title: '最新'
+            // }, {
+            //     title: '花艺'
+            // }, {
+            //     title: '园艺'
+            // }, {
+            //     title: '家居'
+            // }, {
+            //     title: '婚嫁'
+            // }, {
+            //     title: '生活'
+            // }, {
+            //     title: '杂物'
+            // }],
+            // activeIndex: 0
+        }
+
+        methods = {
+            // changeActiveIndex(e) {
+            //     this.activeIndex = parseInt(e.currentTarget.dataset.id)
+            // }
+        }
+    }
+</script>
+
+<style lang='scss' scoped>
+    .moments {
+      position: relative;
+      display: flex;
+      padding-bottom: 10rpx;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      background-color: #f8f8f8;
+      background-color: #f8f8f8;
+    }
+</style>

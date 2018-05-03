@@ -1,0 +1,134 @@
+<template>
+    <view class="me">
+        <v-moment :moment.sync="momentData" @toggleUpvote.user="toggleUpvote" @toggleMoments.user="toggleMoments"></v-moment>
+        <v-comments :comments.sync="comments"></v-comments>
+        <v-editor @click.user="comment" :inputValue.sync="inputValue"></v-editor>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getFetch, postFetch } from '@/modules/common/fetch'
+    import momentComponent from '@/components/moment'
+    import Comments from '@/components/comments'
+    import Editor from '@/components/editor'
+    import { paddingImg } from '@/modules/common/utils'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '我的'
+        }
+
+        components = {
+            'v-editor': Editor,
+            'v-moment': momentComponent,
+            'v-comments': Comments
+        }
+
+        computed = {
+            momentData () {
+                const user = this.moment.user || {}
+                this.comments = this.moment.comments
+                return {
+                    avatar: user.avatarUrl,
+                    user_id: this.moment.user_id,
+                    name: user.nickName,
+                    content: this.moment.content,
+                    images: paddingImg(this.moment.circle_imgs.map(i => i.imgUrl)),
+                    createTime: this.moment.created_at || '无返回时间',
+                    upvoteNum: this.moment.upvoteNum,
+                    commentsNum: this.moment.commentsNum
+                }
+            }
+        }
+
+        data = {
+            inputValue: '',
+            moment: {
+                circle_imgs: [],
+                targets: [],
+                comments: [],
+                user: {}
+            },
+            comments: []
+        }
+        async addComment (content) {
+            const userInfo = await this.$parent.getUserInfo()
+            await postFetch('/circles/comment', {
+                data: {
+                    content,
+                    circle_id: this.moment.id
+                },
+                noAjax: true
+            }).then(() => {
+                this.comments.unshift({
+                    content,
+                    user: {
+                        avatarUrl: userInfo.avatarUrl,
+                        nickName: userInfo.nickName
+                    },
+                    created_at: new Date(),
+                    user_id: userInfo.nickName
+                })
+                this.inputValue = ''
+                this.$apply()
+            }).catch(() => {
+                wepy.showToast({
+                    title: '评论失败',
+                    icon: 'none',
+                    duration: 2000
+                })
+            })
+        }
+        methods = {
+            toggleUpvote () {
+                if (this.moment.hasZan) {
+                    return this.requestUpvote(false)
+                }
+                return this.requestUpvote(true)
+            },
+            toggleMoments () {
+                console.log('toggleMoments')
+            },
+            comment (data) {
+                this.addComment(data)
+            }
+        }
+        async requestUpvote (isUpVote) {
+            await getFetch(`/circles/${this.moment.id}/${isUpVote ? 'zan' : 'unzan'}`, {
+                noAjax: true
+            }).then(() => {
+                this.moment.hasZan = !this.moment.hasZan
+                this.moment.upvoteNum = this.moment.hasZan ? this.moment.upvoteNum + 1 : this.moment.upvoteNum > 1 ? this.moment.upvoteNum - 1 : 0
+                this.$apply()
+            })
+        }
+        async onLoad (options) {
+            const rsp = await getFetch(`/circles/${options.id || 1}`)
+            this.moment = rsp.circle
+            this.moment.hasZan = rsp.hasZan
+            this.moment.upvoteNum = rsp.circle.targets.length
+            this.moment.commentsNum = rsp.circle.comments.length
+            this.$apply()
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .me {
+        position: relative;
+        width: 100%;
+        .comments {
+            padding-bottom: 100rpx;
+            .comment {
+                margin: 20rpx 30rpx;
+                font-size: 14px;
+                color: #555555;
+            }
+        }
+        .edit {
+            position: fixed;
+            bottom: 0;
+        }
+    }
+</style>

@@ -1,0 +1,99 @@
+<template>
+    <view class="activity" data-id="{{item.id}}" @tap="tap">
+        <image class="cover" src="{{item.cover}}" mode="aspectFill"></image>
+        <view class="content-view">
+            <text class="title">{{item.title}}</text>
+            <text class="description">{{item.description}}</text>
+            <!-- <text class="time">{{item.time}}</text>
+            <text class="address">{{item.address}}</text> -->
+            <view class="last">
+                <!-- <text class="money">{{item.money > 0 ? item.money : '免费'}}</text> -->
+                <text class="join" type="default">报名</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            item: {}
+        }
+
+        methods = {
+            tap(e) {
+                this.$emit('click', e)
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .activity {
+      position: relative;
+      display: flex;
+      padding: 20rpx;
+      border-top: 1px solid #f4f4f4;
+      border-bottom: 1px solid #f4f4f4;
+      background-color: #fff;
+      margin-top: 20rpx;
+      .cover {
+        display: block;
+        width: 300rpx;
+        height: 200rpx;
+      }
+      .content-view {
+        position: relative;
+        margin-left: 20rpx;
+        font-size: 14px;
+        flex: 1;
+        .title {
+          font-size: 14px;
+          font-weight: bold;
+          color: black;
+          width: 100%;
+        }
+        text {
+          display: flex;
+          align-items: center;
+          margin-top: 5rpx;
+          font-size: 12px;
+          color: #333;
+        }
+        .description {
+            height: 80rpx;
+            display: inline-block;
+            overflow:hidden;
+        }
+        .address,
+        .time {
+          color: #8a8a8a;
+        }
+        .money {
+          display: inline-block;
+          color: #debe7b;
+        }
+        .join {
+          display: inline-block;
+          color: #fff;
+          width: 120rpx;
+          height: 50rpx;
+          font-size: 14px;
+          text-align: center;
+          border-radius: 10rpx;
+          line-height: 50rpx;
+          background-color: #debe7b;
+        }
+        .last {
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+      }
+    }
+</style>

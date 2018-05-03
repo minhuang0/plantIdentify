@@ -1,0 +1,77 @@
+<template>
+    <view class="activities">
+        <repeat for="{{activities}}" key="index" index="index" item="item">
+            <v-activity :item.sync="item" @click.user='selectActivity'></v-activity>
+        </repeat>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import activityComponent from '@/components/activity'
+
+    export default class Index extends wepy.component {
+        props = {
+            activityData: Array
+        }
+        components = {
+            'v-activity': activityComponent
+        }
+
+        computed = {
+            activities () {
+                return this.activityData.map(i => {
+                    return {
+                        id: i.id,
+                        cover: i.imgUrl,
+                        title: i.title,
+                        description: i.description
+                    }
+                })
+            }
+        }
+
+        // data = {
+        //     activities: [{
+        //         id: 1,
+        //         cover: 'https://modao.cc/uploads3/images/1030/10303683/raw_1497508860.jpeg',
+        //         title: '森林蘑菇总动员亲子厨房大赛',
+        //         time: '2017-07-18 15:00:00',
+        //         address: '北京',
+        //         description: '报名时间：2月1日至2月25日\n报名电话：18210237062 88892960\n幼儿年龄：6-12岁'
+        //     }, {
+        //         id: 2,
+        //         cover: 'https://modao.cc/uploads3/images/1030/10303685/raw_1497508861.jpeg',
+        //         title: '向自然学习的生活方式',
+        //         time: '2017-07-18 15:00:00',
+        //         address: '北京',
+        //         description: '时间：2017年1月4日 14:00\n内容：向自然学习的生活方式\n讲师：中医文史研究会副会长 王黑特'
+        //     }, {
+        //         id: 3,
+        //         cover: 'https://modao.cc/uploads3/images/1026/10260002/raw_1497399725.jpeg',
+        //         title: '“体验自然”森林旅行团开团啦！',
+        //         time: '2017-07-18 15:00:00',
+        //         address: '北京',
+        //         description: '时间：2017年9月26日-10月9日\n旅行地点：河北塞罕坝国家森林公园'
+        //     }]
+        // }
+
+        methods = {
+            selectActivity(e) {
+                wepy.navigateTo({
+                    url: `../../pages/recommend/index?id=${e.currentTarget.dataset.id}`
+                })
+            }
+        }
+    }
+</script>
+
+<style lang='scss' scoped>
+    .activities {
+      position: relative;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      background-color: #f8f8f8;
+    }
+</style>

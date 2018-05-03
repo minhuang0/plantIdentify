@@ -1,0 +1,74 @@
+<template>
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <view class="course" data-id="{{item.id}}" @tap="tap">
+            <image class="cover" src="{{item.cover}}" mode="aspectFill"></image>
+            <view class="content-view">
+                <text class="title">{{item.title}}</text>
+                <text class="description ellipsis">{{item.description}}</text>
+                <text class="tag">{{item.tag}}</text>
+            </view>
+        </view>
+    </repeat>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+        props = {
+            list: {}
+        }
+        methods = {
+            tap(e) {
+                this.$emit('click', e)
+            }
+        }
+        onLoad() {
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .course {
+      position: relative;
+      display: flex;
+      border-top: 1px solid #f4f4f4;
+      border-bottom: 1px solid #f4f4f4;
+      background-color: #fff;
+      margin-top: 20rpx;
+      .cover {
+        display: block;
+        width: 300rpx;
+        height: 286rpx;
+      }
+      .content-view {
+        padding: 20rpx;
+        position: relative;
+        margin-left: 20rpx;
+        font-size: 14px;
+        flex: 1;
+        .title {
+          font-size: 14px;
+          font-weight: bold;
+          color: black;
+          width: 100%;
+        }
+        text {
+          display: flex;
+          align-items: center;
+          margin-top: 5rpx;
+          font-size: 12px;
+          color: #333;
+        }
+        .description {
+          align-items: flex-start;
+          height: 110rpx;
+          white-space: normal;
+          color: #8a8a8a;
+        }
+        .tag {
+          color: #fd7e2b;
+        }
+      }
+    }
+</style>
