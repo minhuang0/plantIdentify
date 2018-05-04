@@ -6,12 +6,12 @@
                 <image class="icon" src="../../modules/images/icon.png" mode="aspectFit"></image>
                 <image class="name" src="../../modules/images/name.png" mode="aspectFit"></image>
             </view>
-            <view class="description">文字描述文字描述文字描述文字描述文字描述文字描述文字描述</view>
+            <view class="description">点击拍照等待10秒左右即可得到识别结果</view>
             <image class="cover" src="../../modules/images/cover.png"></image>
             <view class="start-identify" @tap="goIdentifyPage">
                 <view class="btn">开始识别</view>
             </view>
-            <view class="copyright">中国林业出版社所有</view>
+            <view class="copyright">中国林业出版社</view>
         </view>
     </view>
 </template>
