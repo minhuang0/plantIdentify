@@ -67,8 +67,8 @@
         }
         async getImageFromAlbum (e) {
             const imageFilePath = await chooseImage({
-                sourceType: ['album'],
-                sizeType: ['compressed']
+                sourceType: ['album']
+                // sizeType: ['compressed']
             }).then(res => {
                 return res.tempFilePaths[0]
             })

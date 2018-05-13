@@ -184,7 +184,7 @@
                 currentTimes++
                 minImage = await this.compressImage()
             }
-            console.log(currentTimes)
+            console.log(currentTimes, minImage)
             this.image = minImage
             this.$apply()
             uploadFile('/leafSnap', minImage).then(res => this.parseLeafSnapResponse(res)).catch(e => {
