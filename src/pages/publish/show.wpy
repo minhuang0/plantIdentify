@@ -130,7 +130,7 @@
                             reject(e)
                         }
                     })
-                }, 2000)
+                }, 500)
             })
         }
         async getPlantDetail (name, score) {
@@ -178,7 +178,13 @@
             //     ctx.drawImage(this.loadImage, 87, 90, 200, 200, 0, 0, 200, 200)
             // }
             ctx.draw()
-            const minImage = await this.compressImage()
+            let minImage = ''
+            let currentTimes = 0
+            while (!minImage && currentTimes < 6) {
+                currentTimes++
+                minImage = await this.compressImage()
+            }
+            console.log(currentTimes)
             this.image = minImage
             this.$apply()
             uploadFile('/leafSnap', minImage).then(res => this.parseLeafSnapResponse(res)).catch(e => {
