@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-        <view class="image-view">
+        <view class="cover" @tap="goWebviewDetail">
             <image src="{{image}}" class="image" mode="aspectFit"></image>
             <view class="shadow">
                 拍摄实物图
@@ -8,12 +8,23 @@
         </view>
         <view class="list">
             <block wx:for="{{formatResult}}" wx:key="{{index}}">
-                <view class="item">
+                <view wx:if="{{item.abstracts}}" class="detail" @tap="goWebviewDetail" data-item="{{item}}">
+                    <image src="{{item.imageUrl}}" class="image" mode="aspectFit"></image>
+                    <view class="decription">
+                        <view class="name">{{item.name}}</view>
+                        <view>{{ '识别程度: ' + item.score}}</view>
+                        <view class="abstracts ellipsis">{{item.abstracts}}</view>
+                    </view>
+                </view>
+                <!-- <view class="item">
                     <view class="name">{{item.name}}</view>
                     <view>{{item.score}}</view>
-                </view>
+                </view> -->
             </block>
+            <view class="no-plant" wx:if="{{isNotPlant}}">抱歉, 查不到该植物信息!</view>
         </view>
+        <view class="more" wx:if="{{result.length > 0 && isOnlyShowFirst && !isNotPlant}}" @tap="showMore">查看更多结果</view>
+        <view class="iconfont icon icon-cancel" @tap="close"></view>
         <image src="{{loadImage}}" bindload="loadimage" class="load-image" mode="aspectFit"></image>
         <canvas canvas-id="canvas" style="width: {{canvas.width}}px; height: {{canvas.height}}px;" class="canvas"></canvas>
     </view>
@@ -33,22 +44,63 @@
             shareId: '',
             loadImage: '', // canvas切图用的image
             isFromAlbum: false, // 是否来源于相册
+            plantDetail: {}, // 图片详情
             canvas: {
                 width: 375,
                 height: 600
             },
+            isOnlyShowFirst: true,
+            isNotPlant: false,
             isFromShare: false
         }
         methods = {
+            goWebviewDetail (e) {
+                if (e.currentTarget.dataset.item && e.currentTarget.dataset.item.name) {
+                    wepy.navigateTo({
+                        url: `./detail?name=${e.currentTarget.dataset.item.name}`
+                    })
+                }
+            },
+            showMore () {
+                this.isOnlyShowFirst = false
+            },
+            close () {
+                wepy.navigateBack()
+            }
         }
         computed = {
             formatResult () {
-                return this.result.map(i => {
-                    return {
-                        score: parseInt(i.score * 100) + '%',
-                        name: i.name
+                const result = this.result.reduce((arr, i) => {
+                    if (this.isOnlyShowFirst && arr.length === 1) {
+                        return arr
                     }
-                })
+                    if (!i.desList) {
+                        return arr
+                    }
+                    if (Array.isArray(i.desList)) {
+                        i.desList.map((item) => {
+                            arr.push({
+                                score: parseInt(i.score * 100) + '%',
+                                name: i.name,
+                                imageUrl: item.imageUrl,
+                                abstracts: item.abstracts
+                            })
+                        })
+                        return arr
+                    }
+                    arr.push({
+                        score: parseInt(i.score * 100) + '%',
+                        name: i.name,
+                        imageUrl: i.desList.imageUrl || '',
+                        abstracts: i.desList.abstracts || ''
+                    })
+                    return arr
+                }, [])
+                if (this.result.length > 0 && result.length === 0) {
+                    this.isNotPlant = true
+                    // this.$apply()
+                }
+                return result
             }
         }
         onShareAppMessage () {
@@ -78,14 +130,31 @@
                             reject(e)
                         }
                     })
-                }, 1000)
+                }, 2000)
             })
+        }
+        async getPlantDetail (name, score) {
+            const res = await getFetch(`/searchBySolr?strs=${'绿萝' || name}`, {
+                noAjax: true
+            })
+            this.plantDetail.baike = res.baikeParams ? res.baikeParams[0] : {
+                imageUrl: '',
+                abstracts: ''
+            }
+            this.plantDetail.zhiku = res.zhikuParams
+            this.plantDetail.name = name
+            this.plantDetail.score = parseInt(score * 100) + '%'
+            this.$apply()
         }
         parseLeafSnapResponse (rsp = '{}') {
             const res = JSON.parse(rsp)
             const result = res.res && res.res.result
             this.shareId = res.id
             this.result = Array.isArray(result) ? result : result ? [result] : []
+            // 去拿植物详情
+            // if (this.result[0] && this.result[0].name) {
+            //     this.getPlantDetail(this.result[0].name, this.result[0].score)
+            // }
             wepy.hideLoading()
             wepy.showShareMenu({
                 withShareTicket: true
@@ -119,7 +188,6 @@
         async onLoad (options) {
             wepy.getSystemInfo({
                 success: function(res) {
-                    console.log(res.pixelRatio)
                 }
             })
             if (options.shareId) {
@@ -128,7 +196,7 @@
             wepy.showLoading({ title: '识别中', mask: true })
             this.isFromAlbum = options.isFromAlbum !== 'false'
             this.$apply()
-            this.loadImage = options.image ? decodeURIComponent(options.image) : 'https://pro.modao.cc/uploads3/images/1935/19351230/raw_1524551943.jpeg'
+            this.loadImage = options.image ? decodeURIComponent(options.image) : 'http://imgsa.baidu.com/exp/pic/item/9319cf0936fe90fbd1581bbe.jpg'
             this.$apply()
         }
         async getShareDate (id) {
@@ -149,9 +217,11 @@
     .content {
         width: 100%;
         height: 100%;
+        overflow-y: scroll;
         font-size: 14px;
+        background: #f4f4f4;
     }
-    .image-view {
+    .cover {
         position: relative;
         display: flex;
         align-items: center;
@@ -174,8 +244,38 @@
             background: rgba(0, 0, 0, 0.5);
         }
     }
+
     .list {
-        padding: 20rpx 60rpx;
+        background-color: #f4f4f4;
+        padding: 20rpx;
+        min-height: 240rpx;
+        .detail {
+            display: flex;
+            background-color: #fff;
+            margin-top: 20rpx;
+            height: 300rpx;
+            .image {
+                flex: 1;
+                display: inline-block;
+                width: 300rpx;
+                height: 300rpx;
+            }
+            .decription {
+                color: #737373;
+                margin-left: 20rpx;
+                padding: 20rpx 0;
+                overflow: hidden;
+                flex: 2;
+                display: inline-block;
+                .name {
+                    margin-bottom: 10rpx;
+                }
+            }
+        }
+        .abstracts {
+            height: 225rpx;
+             white-space: normal;
+        }
         .item {
             margin: 25rpx 0;
             padding: 5rpx;
@@ -195,6 +295,23 @@
                 left: 0;
             }
         }
+        .no-plant {
+            text-align: center;
+            margin: 40rpx;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    }
+    .more {
+        height: 60rpx;
+        margin-top: 20rpx;
+        line-height: 60rpx;
+        text-align: center;
+    }
+    .icon-cancel {
+        margin-top: 40rpx;
+        text-align: center;
+        font-size: 40px;
     }
     .canvas {
         position: absolute;

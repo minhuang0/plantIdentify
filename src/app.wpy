@@ -11,8 +11,9 @@
         config = {
             pages: [
                 'pages/publish/welcome',
+                'pages/publish/show',
                 'pages/publish/index',
-                'pages/publish/show'
+                'pages/publish/detail'
             ],
             window: {
                 backgroundTextStyle: 'light',

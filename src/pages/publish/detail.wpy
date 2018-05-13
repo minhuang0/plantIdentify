@@ -1,0 +1,26 @@
+<template>
+    <web-view src="{{url}}"></web-view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '花瓣'
+        }
+        data = {
+            url: ''
+        }
+        methods = {
+        }
+        onLoad (options) {
+            console.log(options.name)
+            this.url = `http://124.205.250.31/lyportal/solr/solrList?strs=${options.name}&type=name`
+            this.$apply()
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+</style>
