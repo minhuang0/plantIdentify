@@ -16,7 +16,7 @@
         }
         onLoad (options) {
             console.log(options.name)
-            this.url = `http://124.205.250.31/lyportal/solr/solrList?strs=${options.name}&type=name`
+            this.url = `https://www.cfpheks.com?strs=${options.name}&type=name`
             this.$apply()
         }
     }

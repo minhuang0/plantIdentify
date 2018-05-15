@@ -202,7 +202,7 @@
             wepy.showLoading({ title: '识别中', mask: true })
             this.isFromAlbum = options.isFromAlbum !== 'false'
             this.$apply()
-            this.loadImage = options.image ? decodeURIComponent(options.image) : 'http://imgsa.baidu.com/exp/pic/item/9319cf0936fe90fbd1581bbe.jpg'
+            this.loadImage = options.image ? decodeURIComponent(options.image) : 'https://sh.cfpheks.com/storage/d4b51c0983704f01c84f42b2385147be/AjQGiixNQ40PF53ASIHzkoFzyMiK5ZJUQlkrbRYN.png'
             this.$apply()
         }
         async getShareDate (id) {
@@ -268,8 +268,7 @@
             }
             .decription {
                 color: #737373;
-                margin-left: 20rpx;
-                padding: 20rpx 0;
+                margin: 20rpx;
                 overflow: hidden;
                 flex: 2;
                 display: inline-block;
@@ -279,8 +278,10 @@
             }
         }
         .abstracts {
-            height: 225rpx;
-             white-space: normal;
+            font-size: 14px;
+            line-height: 20px;
+            height: 80px;
+            white-space: normal;
         }
         .item {
             margin: 25rpx 0;
