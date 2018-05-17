@@ -16,7 +16,7 @@
         }
         onLoad (options) {
             console.log(options.name)
-            this.url = `https://www.cfpheks.com?strs=${options.name}&type=name`
+            this.url = `https://www.cfpheks.com/lyportal/solr/solrList?strs=${encodeURIComponent(options.name)}&type=name`
             this.$apply()
         }
     }
