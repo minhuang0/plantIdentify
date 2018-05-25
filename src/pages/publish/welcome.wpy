@@ -11,7 +11,7 @@
             <view class="start-identify" @tap="goIdentifyPage">
                 <view class="btn">开始识别</view>
             </view>
-            <view class="copyright">中国林业出版社</view>
+            <view class="copyright" @tap="goLive">中国林业出版社</view>
         </view>
     </view>
 </template>
@@ -27,6 +27,11 @@
             goIdentifyPage () {
                 wepy.navigateTo({
                     url: `./index`
+                })
+            },
+            goLive () {
+                wepy.navigateTo({
+                    url: `../live/index`
                 })
             }
         }

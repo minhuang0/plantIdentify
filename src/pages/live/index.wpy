@@ -1,0 +1,328 @@
+<template>
+    <view style="width:100%;height: 100%; background-color: black;">
+        <!-- <view wx:if="{{!playing}}" style="width:100%; height:110rpx;" >
+            <input style="color:#ffffff; background-color: #151922; width:calc(100% - 200rpx); border-radius:8rpx;height:70rpx;display:inline-block; position:absolute;left:20rpx;margin-top:20rpx;padding-left:10rpx" placeholder-style="font-size:30rpx;color:#ffffff;opacity: 0.55;" placeholder="请输入或扫码填充播放地址" focus="{{focus}}" @tap='onInputTap' bindblur='onBlur' value="{{playUrl}}"></input>
+            <image style="width: 60rpx; height: 60rpx;display:inline-block; position:absolute;right:95rpx;margin-top:25rpx;" src="./Resources/new.png" @tap='onNewUrlClick'></image>
+            <image style="width: 60rpx; height: 60rpx;display:inline-block; position:absolute;right:20rpx;margin-top:25rpx;" src="./Resources/QR_code.png" @tap='onScanQR'></image>
+        </view>
+        <view style="width:100%;height:{{playing?'100%':'calc(100% - 110rpx)'}};position:relative;">
+        -->
+        <view style="width:100%;height:100%;position:relative;">
+            <live-player
+            style="width:100%;height:100%;position:absolute;"
+            id="video-livePlayer"
+            mode="RTC"
+            orientation="{{orientation}}"
+            muted="{{muted}}"
+            background-mute="{{backgroundMute}}"
+            object-fit="{{objectFit}}"
+            src="{{playUrl}}"
+            debug="{{debug}}"
+            bindstatechange="onPlayEvent"
+            bindfullscreenchange="onFullScreenChange">
+                <cover-image hidden="{{playing}}" style="width:100%; height: 100%; position:absolute;" src="https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png"></cover-image>
+                <cover-view wx:if="{{!debug || exterFlag}}" style="width:100%; height: 50px; position:absolute; bottom:30px;padding-left:calc(100% / 7);" >
+                <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{playing?'suspend':'start'}}.png" bindtap='onPlayClick'></cover-image>
+                    <cover-view class='bottom_text'>播放</cover-view>
+                </cover-view>
+                <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{orientation == 'vertical'?'portrait':'landscape'}}.png" bindtap='onOrientationClick'></cover-image>
+                    <cover-view class='bottom_text'>{{orientation == 'vertical'?'竖屏':'横屏'}}</cover-view>
+                </cover-view>
+                <!-- <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{debug?'log':'log2'}}.png" bindtap='onLogClick'></cover-image>
+                    <cover-view class='bottom_text'>日志</cover-view>
+                </cover-view> -->
+                <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{muted?'sound-dis':'sound'}}.png" bindtap='onMuteClick'></cover-image>
+                    <cover-view class='bottom_text'>声音</cover-view>
+                </cover-view>
+                <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{fullScreen ? 'fullscreen':'smallscreen'}}.png" bindtap='onFullScreenClick'></cover-image>
+                    <cover-view class='bottom_text'>{{fullScreen ? '全屏':'缩放'}}</cover-view>
+                </cover-view>
+                <cover-view class='bottom_box'>
+                    <cover-image class="bottom_button" src="./Resources/{{objectFit == 'contain'?'adjust':'fill'}}.png" bindtap='onObjectfitClick'></cover-image>
+                    <cover-view class='bottom_text'>{{objectFit == 'contain'?'适应':'填充'}}</cover-view>
+                </cover-view>
+                </cover-view>
+            </live-player>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getFetch } from '@/modules/common/fetch'
+
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '直播',
+            gationBarTitleText: '低延时播放',
+            backgroundColor: '#000',
+            backgroundTextStyle: 'light'
+        }
+        /**
+        * 页面的初始数据
+        */
+        data = {
+            playing: false,
+            videoContext: {},
+
+            fullScreen: false,
+            playUrl: '',
+            orientation: 'vertical',
+            objectFit: 'contain',
+            muted: false,
+            backgroundMuted: false,
+            debug: false,
+            exterFlag: false // 为了兼容微信iOS客户端的bug增加的控制字段，打开debug的时候把操作view remove再add
+        }
+
+        onScanQR () {
+            this.stop()
+            this.createContext()
+            console.log('onScaneQR')
+            var that = this
+            wepy.scanCode({
+                onlyFromCamera: true,
+                success: (res) => {
+                    console.log(res)
+                    that.playUrl = res.result
+                }
+            })
+        }
+
+        onBlur (e) {
+            this.playUrl = e.detail.value
+        }
+
+        async onNewUrlClick () {
+            const res = await getFetch('/getLiveUrl', {
+                noAjax: true
+            })
+            this.playUrl = res.liveUrl
+            this.onPlayClick()
+            console.log(this.playUrl)
+            this.$apply()
+        }
+
+        onPlayClick () {
+            var url = this.playUrl
+            if (url.indexOf('rtmp:') === 0) {
+            } else {
+                wepy.showModal({
+                    content: '非加速播放地址',
+                    showCancel: false
+                })
+                return
+            }
+
+            this.playing = !this.playing
+            console.log(this.playing)
+
+            if (this.playing) {
+                this.videoContext.play()
+                console.log('video play()')
+                wepy.showLoading({
+                    title: ''
+                })
+            } else {
+                this.videoContext.stop()
+                console.log('video stop()')
+                wepy.hideLoading()
+            }
+        }
+
+        onOrientationClick () {
+            if (this.orientation === 'vertical') {
+                this.orientation = 'horizontal'
+            } else {
+                this.orientation = 'vertical'
+            }
+
+            this.orientation = this.orientation
+        }
+
+        onObjectfitClick () {
+            if (this.objectFit === 'fillCrop') {
+                this.objectFit = 'contain'
+            } else {
+                this.objectFit = 'fillCrop'
+            }
+            this.objectFit = this.objectFit
+        }
+
+        onLogClick () {
+            this.setData({
+                debug: !this.debug
+            })
+            var that = this
+            setTimeout(() => {
+                that.setData({
+                    exterFlag: !that.data.exterFlag
+                })
+            }, 10)
+        }
+
+        onMuteClick () {
+            this.muted = !this.muted
+        }
+
+        onFullScreenClick () {
+            if (!this.fullScreen) {
+                this.videoContext.requestFullScreen({
+                    direction: 0
+                })
+            } else {
+                this.videoContext.exitFullScreen({
+                })
+            }
+        }
+
+        onPlayEvent (e) {
+            console.log(e.detail.code)
+            if (e.detail.code === -2301) {
+                this.stop()
+                wepy.showToast({
+                    title: '活动还没开始哦',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+            if (e.detail.code === 2004 || e.detail.code === 2003) {
+                wepy.hideLoading()
+            }
+        }
+
+        onFullScreenChange (e) {
+            this.fullScreen = e.detail.fullScreen
+            console.log(e)
+            wepy.showToast({
+                title: this.fullScreen ? '全屏' : '退出全屏'
+            })
+        }
+
+        stop () {
+            this.palying = false
+            this.orientation = 'vertical'
+            this.objectFit = 'contain'
+            this.muted = false
+            this.fullScreen = false
+            this.backgroundMuted = false
+            this.debug = false
+            this.exterFlag = false
+            console.log(this.videoContext)
+            this.videoContext.stop()
+            wepy.hideLoading()
+        }
+
+        createContext () {
+            this.videoContext = wepy.createLivePlayerContext('video-livePlayer')
+        }
+
+        /**
+        * 生命周期函数--监听页面加载
+        */
+        onLoad (options) {
+            this.onNewUrlClick()
+        }
+
+        /**
+        * 生命周期函数--监听页面初次渲染完成
+        */
+        onReady () {
+            this.createContext()
+            console.log(this.videoContext)
+
+            wepy.setKeepScreenOn({
+                keepScreenOn: true
+            })
+        }
+
+        /**
+        * 生命周期函数--监听页面显示
+        */
+        onShow () {
+            // 保持屏幕常亮
+            wepy.setKeepScreenOn({
+                keepScreenOn: true
+            })
+        }
+
+        /**
+        * 生命周期函数--监听页面隐藏
+        */
+        onHide () {
+
+        }
+
+        /**
+        * 生命周期函数--监听页面卸载
+        */
+        onUnload () {
+            this.stop()
+
+            wepy.setKeepScreenOn({
+                keepScreenOn: false
+            })
+        }
+
+        /**
+        * 页面相关事件处理函数--监听用户下拉动作
+        */
+        onPullDownRefresh () {
+
+        }
+
+        /**
+        * 页面上拉触底事件的处理函数
+        */
+        onReachBottom () {
+
+        }
+
+        /**
+        * 用户点击右上角分享
+        */
+        onShareAppMessage () {
+            return {
+                path: '/pages/live/index'
+                // imageUrl: 'https://mc.qcloudimg.com/static/img/dacf9205fe088ec2fef6f0b781c92510/share.png'
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+.bottom_box {
+    position: relative;
+    width: 30px;
+    height: 50px;
+    margin-left:calc(100% / 14 - 15px);
+    margin-right:calc(100% / 14 - 15px);
+    display:inline-block;
+}
+
+.bottom_button {
+    display:inline-block;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+}
+
+.bottom_button :active{
+    opacity:0.55;
+}
+
+.bottom_text {
+    position: absolute;
+    display:inline-block;
+    color: #ffffff;
+    width: 100%;
+    font-size:10px;
+    bottom: 0;
+    text-align: center;
+}
+</style>
