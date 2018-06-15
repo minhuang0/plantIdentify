@@ -27,13 +27,15 @@ export const fetch = (url, options, query = {}) => {
     })
 }
 
-export const uploadFile = (url, filePath) => {
+export const uploadFile = (url, filePath, formData = {}) => {
+    console.log(filePath, formData)
     const fullUrl = utils.fullUrl(HOST, url)
     return new Promise((resolve, reject) => {
         wepy.uploadFile({
             url: fullUrl,
             filePath,
             name: 'file',
+            formData,
             header: {
                 Cookie: cookie
             },

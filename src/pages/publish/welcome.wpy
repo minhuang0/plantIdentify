@@ -8,7 +8,7 @@
             </view>
             <view class="description">点击拍照等待10秒左右即可得到识别结果</view>
             <image class="cover" src="../../modules/images/cover.png"></image>
-            <view class="start-identify" @tap="goIdentifyPage">
+            <view class="start-identify" @tap="start">
                 <view class="btn">开始识别</view>
             </view>
             <view class="copyright" @tap="goLive">中国林业出版社</view>
@@ -24,9 +24,27 @@
             navigationBarTitleText: '花瓣'
         }
         methods = {
-            goIdentifyPage () {
-                wepy.navigateTo({
-                    url: `./index`
+            start () {
+                const that = this
+                wepy.getSetting({
+                    success (res) {
+                        console.log(res)
+                        if (!res.authSetting['scope.userLocation']) {
+                            wepy.showModal({
+                                title: '是否授权当前位置',
+                                content: '需要获取您的地理位置，请确认授权，否则地图功能将无法使用',
+                                success (res) {
+                                    if (res.cancel) {
+                                        console.info('授权失败')
+                                    } else if (res.confirm) {
+                                        that.showGetLocation()
+                                    }
+                                }
+                            })
+                            return
+                        }
+                        that.goIdentifyPage()
+                    }
                 })
             },
             goLive () {
@@ -34,6 +52,45 @@
                     url: `../live/index`
                 })
             }
+        }
+        goIdentifyPage () {
+            wepy.navigateTo({
+                url: `./index`
+            })
+        }
+        showGetLocation () {
+            const that = this
+            wepy.openSetting({
+                success: function (data) {
+                    if (data.authSetting['scope.userLocation'] === true) {
+                        wepy.showToast({
+                            title: '授权成功',
+                            icon: 'success',
+                            duration: 5000
+                        })
+                        // 再次授权，调用getLocationt的API
+                        that.goIdentifyPage(that)
+                    } else {
+                        wepy.showToast({
+                            title: '授权失败',
+                            icon: 'success',
+                            duration: 5000
+                        })
+                    }
+                }
+
+            })
+        }
+        getLocation () {
+            wepy.getLocation({
+                type: 'wgs84',
+                success: function(res) {
+                    console.log(res)
+                }
+            })
+        }
+        onLoad () {
+            this.getLocation()
         }
     }
 </script>
