@@ -11,6 +11,7 @@
         config = {
             pages: [
                 'pages/publish/welcome',
+                'pages/map/index',
                 'pages/live/index',
                 'pages/publish/show',
                 'pages/publish/index',

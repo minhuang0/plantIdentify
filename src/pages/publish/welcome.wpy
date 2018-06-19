@@ -6,7 +6,7 @@
                 <image class="icon" src="../../modules/images/icon.png" mode="aspectFit"></image>
                 <image class="name" src="../../modules/images/name.png" mode="aspectFit"></image>
             </view>
-            <view class="description">点击拍照等待10秒左右即可得到识别结果</view>
+            <view class="description" @tap="goMap">点击拍照等待10秒左右即可得到识别结果</view>
             <image class="cover" src="../../modules/images/cover.png"></image>
             <view class="start-identify" @tap="start">
                 <view class="btn">开始识别</view>
@@ -51,6 +51,11 @@
                 wepy.navigateTo({
                     url: `../live/index`
                 })
+            },
+            goMap () {
+                wepy.navigateTo({
+                    url: `../map/index`
+                })
             }
         }
         goIdentifyPage () {
@@ -85,7 +90,6 @@
             wepy.getLocation({
                 type: 'wgs84',
                 success: function(res) {
-                    console.log(res)
                 }
             })
         }
