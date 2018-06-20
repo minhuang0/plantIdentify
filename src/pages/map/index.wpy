@@ -1,17 +1,23 @@
 <template>
     <view class="content">
-        <map id="map" longitude="113.324520" latitude="23.099994" scale="14" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height: 100%;"></map>
+        <map wx:if="{{showMap}}" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height: 100%;"></map>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
+    import { getFetch } from '@/modules/common/fetch'
 
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '花瓣'
         }
         data = {
+            longitude: '',
+            latitude: '',
+            boundary: '20',
+            scale: '15',
+            showMap: false,
             markers: [{
                 iconPath: '../../modules/images/flower.jpg',
                 id: 0,
@@ -28,14 +34,67 @@
                 wepy.getLocation({
                     type: 'gcj02',
                     success: function(res) {
-                        console.log(res)
                         resolve(res)
                     }
                 })
             })
         }
+        async downloadFile (url) {
+            return new Promise(resolve => {
+                wepy.downloadFile({
+                    url,
+                    success: function(res) {
+                        // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+                        if (res.statusCode === 200) {
+                            // resolve('../../modules/images/flower.jpg')
+                            resolve(res.tempFilePath)
+                        }
+                        resolve('../../modules/images/flower.jpg')
+                    }
+                })
+            })
+        }
+        async getList () {
+            const res = await getFetch(`/mapList?lon=${this.longitude}&lat=${this.latitude}&boundary=${this.boundary}`, {
+                noAjax: true
+            })
+            return Promise.all(res.reduce((promiseArr, item) => {
+                promiseArr.push(this.downloadFile(item.imgUrl))
+                return promiseArr
+            }, [])).then(result => {
+                console.log(result)
+                return res.reduce((arr, item, idx) => {
+                    arr.push({
+                        iconPath: result[idx],
+                        id: item.id,
+                        latitude: item.latitude + idx / 200,
+                        longitude: item.longitude,
+                        width: 30,
+                        height: 30
+                    })
+                    return arr
+                }, [])
+            })
+            // return res.reduce((previous, item, idx) => {
+            //     console.log(idx)
+            //     return previous.then((arr) => {
+            //         return new Promise(async(resolve) => {
+            //             const iconPath = await this.downloadFile(item.imgUrl)
+            //             console.log(iconPath)
+            //             arr.push({
+            //                 iconPath,
+            //                 id: item.id,
+            //                 latitude: item.latitude + idx / 200,
+            //                 longitude: item.longitude,
+            //                 width: 30,
+            //                 height: 30
+            //             })
+            //             resolve(arr)
+            //         })
+            //     })
+            // }, Promise.resolve([]))
+        }
         openLocation (res) {
-            console.log(res)
             const { latitude, longitude } = res
             wepy.openLocation({
                 latitude,
@@ -52,10 +111,16 @@
         controltap(e) {
             console.log(e.controlId)
         }
-        onLoad () {
-            // this.getLocation().then((res) => {
-            //     return this.openLocation(res)
-            // })
+        async onLoad () {
+            this.getLocation().then(async (res) => {
+                this.longitude = res.longitude
+                this.latitude = res.latitude
+                this.markers = await this.getList()
+                console.log(this.markers)
+                this.showMap = true
+                this.$apply()
+                // return this.openLocation(res)
+            })
         }
     }
 </script>
