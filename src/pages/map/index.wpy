@@ -1,10 +1,23 @@
 <template>
     <view class="content">
         <map wx:if="{{showMap}}" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height: 100%;" bindtap="bindtap" bindupdated="bindupdated">
-            <cover-view class="cover" wx:if="{{cover.show}}">
+        <cover-view class="cover-bg" wx:if="{{cover.show}}" @tap="closeCover">
+            <cover-view class="cover">
                 <cover-image class="img" src="{{cover.url}}" />
-                <cover-view class="name">{{cover.name}}</cover-view>
+                <cover-view class="description">
+                    <cover-view class="row">
+                        <cover-view class="name">{{cover.name}}</cover-view>
+                        <cover-view class="more" data-name="{{cover.name}}" @tap.stop="search">
+                            <cover-view>查看百科</cover-view>
+                            <cover-view class="iconfont icon icon-enter"></cover-view>
+                        </cover-view>
+                    </cover-view>
+                    <cover-view class="row">{{cover.time}}</cover-view>
+                </cover-view>
             </cover-view>
+            <cover-view class="line"></cover-view>
+            <cover-view class="iconfont icon icon-cancel"></cover-view>
+        </cover-view>
         </map>
     </view>
 </template>
@@ -12,6 +25,7 @@
 <script>
     import wepy from 'wepy'
     import { getFetch } from '@/modules/common/fetch'
+    import { format } from 'date-fns'
 
     export default class Index extends wepy.page {
         config = {
@@ -32,18 +46,27 @@
                 height: 30
             }],
             cover: {
-                show: false,
+                show: true,
                 url: '../../modules/images/flower.png',
+                time: '06-18 20:20',
                 name: '111'
             },
             list: []
         }
         methods = {
             bindtap () {
-                this.cover.show = false
+                // this.cover.show = false
             },
             bindupdated () {
+                // this.cover.show = false
+            },
+            closeCover () {
                 this.cover.show = false
+            },
+            search (e) {
+                wepy.navigateTo({
+                    url: `../publish/detail?name=${e.currentTarget.dataset.name}`
+                })
             }
         }
         getLocation () {
@@ -132,8 +155,10 @@
             const result = Array.isArray(res) ? res : res ? [res] : []
             console.log(result)
             this.cover = {
+                id: plant.id,
                 show: true,
                 url: plant.imgUrl,
+                time: format(plant.created_at, 'MM-DD mm:ss'),
                 name: result[0].result[0].name
             }
             console.log(this.cover)
@@ -156,32 +181,82 @@
 
 <style lang="scss" scoped>
     .content {
-        width: 100%;
         height: 100%;
+        width: 100%;
+        .cover-bg {
+            height: 100%;
+            width: 100%;
+            background: rgba(225, 225, 225, 0.95);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            // align-content: center;
+        }
         .cover {
             // display: flex;
             // flex-direction: column;
             // justify-content: center;
             background-color: #ffffff;
-            padding: 20rpx;
-            position: absolute;
+            // position: absolute;
             text-align: center;
-            top: 50%;
-            left: 50%;
-            width: 300rpx;
-            height: 400rpx;
-            margin-top: -150rpx;
-            margin-left: -150rpx;
+            // top: 50%;
+            // left: 50%;
+            width: 440rpx;
+            height: 620rpx;
+            margin:200rpx auto 0;
+            // margin-top: -400rpx;
+            // margin-left: -220rpx;
+            border-radius: 30rpx;
             .img {
                 display: inline-block;
-                width: 240rpx;
-                height: 300rpx;
+                width: 440rpx;
+                height: 500rpx;
             }
-            .name {
-                color: #737373;
-                margin-top: 20rpx;
-                text-align: center;
+            .description {
+                padding: 10rpx 30rpx;
+                font-size: 14px;
+                color: #b1b1b1;
+                cover-view {
+                    line-height: 50rpx;
+                    height: 50rpx;
+                }
+                .row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .name, .more {
+                    color: #737373;
+                    display: inline-block;
+                }
+                .more {
+                    display: flex;
+                    align-items: center;
+                    cover-view {
+                        display: inline-block;
+                    }
+                    .icon-enter {
+                        font-size: 30rpx;
+                    }
+                }
+                .name {
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-align: center;
+                }
             }
+        }
+        .line {
+            width: 6rpx;
+            height: 60rpx;
+            margin:0 auto;
+            background-color: #fff;
+        }
+        .icon-cancel {
+            color: #fff;
+            font-size: 100rpx;
+            line-height: 1;
+            margin-top: -10rpx;
         }
     }
 </style>
