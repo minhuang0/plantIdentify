@@ -46,7 +46,7 @@
                 height: 30
             }],
             cover: {
-                show: true,
+                show: false,
                 url: '../../modules/images/flower.png',
                 time: '06-18 20:20',
                 name: '111'
@@ -116,24 +116,6 @@
                     return arr
                 }, [])
             })
-            // return res.reduce((previous, item, idx) => {
-            //     console.log(idx)
-            //     return previous.then((arr) => {
-            //         return new Promise(async(resolve) => {
-            //             const iconPath = await this.downloadFile(item.imgUrl)
-            //             console.log(iconPath)
-            //             arr.push({
-            //                 iconPath,
-            //                 id: item.id,
-            //                 latitude: item.latitude + idx / 200,
-            //                 longitude: item.longitude,
-            //                 width: 30,
-            //                 height: 30
-            //             })
-            //             resolve(arr)
-            //         })
-            //     })
-            // }, Promise.resolve([]))
         }
         openLocation (res) {
             const { latitude, longitude } = res
@@ -190,22 +172,13 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            // align-content: center;
         }
         .cover {
-            // display: flex;
-            // flex-direction: column;
-            // justify-content: center;
             background-color: #ffffff;
-            // position: absolute;
             text-align: center;
-            // top: 50%;
-            // left: 50%;
             width: 440rpx;
             height: 620rpx;
             margin:200rpx auto 0;
-            // margin-top: -400rpx;
-            // margin-left: -220rpx;
             border-radius: 30rpx;
             .img {
                 display: inline-block;
