@@ -34,7 +34,7 @@
         data = {
             longitude: '',
             latitude: '',
-            boundary: '20',
+            boundary: '0.3',
             scale: '15',
             showMap: false,
             markers: [{
