@@ -16,7 +16,7 @@
                 </cover-view>
             </cover-view>
             <cover-view class="line"></cover-view>
-            <cover-view class="iconfont icon icon-cancel"></cover-view>
+            <cover-image class="cancel" src="../../modules/images/cancle.png" />
         </cover-view>
         </map>
     </view>
@@ -27,18 +27,20 @@
     import { getFetch } from '@/modules/common/fetch'
     import { format } from 'date-fns'
 
+    const DEFAULT_ICON_PATH = '../../modules/images/flower.png'
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '花瓣'
         }
         data = {
+            mapCtx: '',
             longitude: '',
             latitude: '',
             boundary: '0.3',
-            scale: '15',
-            showMap: false,
+            scale: '16',
+            showMap: true,
             markers: [{
-                iconPath: '../../modules/images/flower.png',
+                iconPath: DEFAULT_ICON_PATH,
                 id: 0,
                 latitude: 23.099994,
                 longitude: 113.324520,
@@ -47,18 +49,20 @@
             }],
             cover: {
                 show: false,
-                url: '../../modules/images/flower.png',
+                url: DEFAULT_ICON_PATH,
                 time: '06-18 20:20',
-                name: '111'
+                name: '非植物'
             },
-            list: []
+            listMap: new Map()
         }
         methods = {
-            bindtap () {
+            bindupdated (e) {
+                // console.log('bindupdated')
                 // this.cover.show = false
             },
-            bindupdated () {
-                // this.cover.show = false
+            bindtap (e) {
+                this.getPositionAndUpdateMarkets(e)
+                this.cover.show = false
             },
             closeCover () {
                 this.cover.show = false
@@ -68,6 +72,33 @@
                     url: `../publish/detail?name=${e.currentTarget.dataset.name}`
                 })
             }
+        }
+        async getPositionAndUpdateMarkets (e) {
+            // 5-18 scale缩放范围
+            const { southwest, northeast } = await this.getRegion()
+            const boundary = northeast.latitude - southwest.latitude
+            const latitude = (northeast.latitude + southwest.latitude) / 2
+            const longitude = (northeast.longitude + southwest.longitude) / 2
+            await this.getList({ latitude, longitude, boundary })
+            this.updateMarkers()
+        }
+        getRegion () {
+            return new Promise(resolve => {
+                this.mapCtx.getRegion({
+                    success (e) {
+                        resolve(e)
+                    }
+                })
+            })
+        }
+        getScale () {
+            return new Promise(resolve => {
+                this.mapCtx.getScale({
+                    success (e) {
+                        resolve(e.scale)
+                    }
+                })
+            })
         }
         getLocation () {
             return new Promise((resolve) => {
@@ -86,77 +117,89 @@
                     success: function(res) {
                         // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
                         if (res.statusCode === 200) {
-                            resolve('../../modules/images/flower.png')
-                            // resolve(res.tempFilePath)
+                            // resolve('../../modules/images/flower.png')
+                            resolve(res.tempFilePath)
                         }
-                        resolve('../../modules/images/flower.png')
+                        resolve('')
                     }
                 })
             })
         }
-        async getList () {
-            const res = await getFetch(`/mapList?lon=${this.longitude}&lat=${this.latitude}&boundary=${this.boundary}`, {
+        async getList ({ longitude, latitude, boundary } = {}) {
+            const res = await getFetch(`/mapList?lon=${longitude || this.longitude}&lat=${latitude || this.latitude}&boundary=${boundary || this.boundary}`, {
                 noAjax: true
             })
-            this.list = res
             this.$apply()
-            return Promise.all(res.reduce((promiseArr, item) => {
-                promiseArr.push(this.downloadFile(item.imgUrl))
-                return promiseArr
-            }, [])).then(result => {
-                return res.reduce((arr, item, idx) => {
+            res.map(item => {
+                // promiseArr.push(Promise.resolve('../../modules/images/flower.png'))
+                // promiseArr.push(this.downloadFile(item.imgUrl))
+                ((data) => {
+                    this.downloadFile(data.imgUrl).then(url => {
+                        const currentData = this.listMap.get(item.id)
+                        if (!(currentData.id && currentData.localImageUrl)) {
+                            data.localImageUrl = url
+                            this.listMap.set(data.id, data)
+                        }
+                    })
+                })(item)
+            })
+            return res.map((item, idx) => {
+                // item.localImageUrl = result[idx]
+                if (!this.listMap.get(item.id)) {
+                    this.listMap.set(item.id, item)
+                }
+            })
+        }
+        async regionchange(e) {
+            if (e.type === 'end') {
+                await this.getPositionAndUpdateMarkets()
+                this.cover.show = false
+            }
+        }
+        markertap(e) {
+            const plant = this.listMap.get(e.markerId)
+            const res = JSON.parse(plant.res)
+            const result = Array.isArray(res.result) ? res.result : res.result ? [res.result] : []
+            this.cover = {
+                id: plant.id,
+                show: true,
+                url: plant.localImageUrl || plant.imgUrl,
+                time: format(plant.created_at, 'MM-DD mm:ss'),
+                name: result[0].name
+            }
+        }
+        updateMarkers () {
+            this.markers = Array.from(this.listMap.values()).reduce((arr, item) => {
+                if (item.localImageUrl) {
                     arr.push({
-                        iconPath: result[idx],
+                        iconPath: item.localImageUrl,
                         id: item.id,
-                        latitude: item.latitude + idx / 200,
+                        latitude: item.latitude,
                         longitude: item.longitude,
                         width: 30,
                         height: 30
                     })
-                    return arr
-                }, [])
-            })
+                }
+                return arr
+            }, [])
+            this.$apply()
         }
-        openLocation (res) {
-            const { latitude, longitude } = res
-            wepy.openLocation({
-                latitude,
-                longitude,
-                scale: 28
-            })
-        }
-        regionchange(e) {
-            this.cover.show = false
-            console.log(e.type)
-        }
-        markertap(e) {
-            console.log(e)
-            console.log(e.markerId)
-            const plant = this.list.find((item) => item.id === e.markerId)
-            const res = JSON.parse(plant.res)
-            const result = Array.isArray(res) ? res : res ? [res] : []
-            console.log(result)
-            this.cover = {
-                id: plant.id,
-                show: true,
-                url: plant.imgUrl,
-                time: format(plant.created_at, 'MM-DD mm:ss'),
-                name: result[0].result[0].name
-            }
-            console.log(this.cover)
-        }
-        controltap(e) {
+        async controltap(e) {
             console.log(e.controlId)
         }
         async onLoad () {
-            this.getLocation().then(async (res) => {
-                this.longitude = res.longitude
-                this.latitude = res.latitude
-                this.markers = await this.getList()
-                this.showMap = true
-                this.$apply()
-                // return this.openLocation(res)
-            })
+            // 使用 wx.createMapContext 获取 map 上下文
+            this.mapCtx = wepy.createMapContext('map')
+            const { longitude, latitude } = await this.getLocation()
+            this.longitude = longitude
+            this.latitude = latitude
+            await this.getList({ longitude: longitude, latitude: latitude, boundary: this.boundary })
+            this.updateMarkers()
+            this.$apply()
+            // 3秒更新markers
+            setInterval(() => {
+                this.updateMarkers()
+            }, 3000)
         }
     }
 </script>
@@ -225,11 +268,13 @@
             margin:0 auto;
             background-color: #fff;
         }
-        .icon-cancel {
-            color: #fff;
-            font-size: 100rpx;
-            line-height: 1;
-            margin-top: -10rpx;
+        .cancel {
+            position:relative;
+            left:50%;
+            margin-left:-50rpx;
+            margin-top:-10rpx;
+            height: 100rpx;
+            width:100rpx;
         }
     }
 </style>
