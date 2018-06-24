@@ -10,8 +10,8 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/publish/welcome',
                 'pages/map/index',
+                'pages/publish/welcome',
                 'pages/live/index',
                 'pages/publish/show',
                 'pages/publish/index',
