@@ -1,0 +1,16 @@
+
+    <view class="content _b39ff53">
+        <image class="bg _b39ff53" src="../../modules/images/welcome_bg.jpg"/>
+        <view class="main _b39ff53">
+            <view class="header _b39ff53">
+                <image class="icon _b39ff53" src="../../modules/images/icon.png" mode="aspectFit"/>
+                <image class="name _b39ff53" src="../../modules/images/name.png" mode="aspectFit"/>
+            </view>
+            <view class="description _b39ff53" bindtap="goMap">点击拍照等待10秒左右即可得到识别结果</view>
+            <image class="cover _b39ff53" src="../../modules/images/cover.png"/>
+            <view class="start-identify _b39ff53" bindtap="start">
+                <view class="btn _b39ff53">开始识别</view>
+            </view>
+            <view class="copyright _b39ff53" bindtap="goLive">中国林业出版社</view>
+        </view>
+    </view>

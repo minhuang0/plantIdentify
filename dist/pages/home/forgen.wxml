@@ -1,16 +1,16 @@
 
-    <view class="_65c645e">
-        <block class="_65c645e" wx:for="{{lists}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+    <view class="_518f308">
+        <block class="_518f308" wx:for="{{lists}}" wx:for-index="index" wx:for-item="item" wx:key="index">
             
-    <view class="title _cbe9f31 _65c645e">{{item.categoryName}}</view>
+    <view class="title _e409347 _518f308">{{item.categoryName}}</view>
             
-    <block class="_bdfbe46 list _65c645e" wx:for="{{item.list}}" wx:for-index="$vCourse$index" wx:for-item="$vCourse$item" wx:key="$vCourse$index">
-        <view class="course _bdfbe46" data-id="{{$vCourse$item.id}}" bindtap="$vCourse$tap" data-com-index="{{index}}">
-            <image class="cover _bdfbe46" src="{{$vCourse$item.cover}}" mode="aspectFill"/>
-            <view class="content-view _bdfbe46">
-                <text class="title _bdfbe46">{{$vCourse$item.title}}</text>
-                <text class="description ellipsis _bdfbe46">{{$vCourse$item.description}}</text>
-                <text class="tag _bdfbe46">{{$vCourse$item.tag}}</text>
+    <block class="_ac76620 list _518f308" wx:for="{{item.list}}" wx:for-index="$vCourse$index" wx:for-item="$vCourse$item" wx:key="$vCourse$index">
+        <view class="course _ac76620" data-id="{{$vCourse$item.id}}" bindtap="$vCourse$tap" data-com-index="{{index}}">
+            <image class="cover _ac76620" src="{{$vCourse$item.cover}}" mode="aspectFill"/>
+            <view class="content-view _ac76620">
+                <text class="title _ac76620">{{$vCourse$item.title}}</text>
+                <text class="description ellipsis _ac76620">{{$vCourse$item.description}}</text>
+                <text class="tag _ac76620">{{$vCourse$item.tag}}</text>
             </view>
         </view>
     </block>

@@ -1,12 +1,12 @@
 
-    <view class="_1daf42e">
+    <view class="_fb07eff">
         <!-- <v-navbar v-bind:alldata.once='tabs' v-bind:activeIndex.sync='activeIndex' v-bind:sliderWidth.once='sliderWidth' v-on:changeActiveIndex='changeActiveIndex'></v-navbar> -->
         <!-- <v-choice v-bind:class.once='{ hidden: activeIndex !== 0}' v-bind:choiceData.sync="choiceData"></v-choice> -->
         <!-- <v-moments v-bind:class.once='{ hidden: activeIndex !== 1}' v-bind:momentsData.sync="momentsData"></v-moments> -->
         
-    <view class="_141034e _1daf42e">
+    <view class="_c622cf8 _fb07eff">
         
-    <swiper class="swiper _141034e" indicator-dots="{{$vChoice$vSwper$swiperConfig.indicatorDots}}" autoplay="{{$vChoice$vSwper$swiperConfig.autoplay}}" interval="{{$vChoice$vSwper$swiperConfig.interval}}" duration="{{$vChoice$vSwper$swiperConfig.duration}}">
+    <swiper class="swiper _c622cf8" indicator-dots="{{$vChoice$vSwper$swiperConfig.indicatorDots}}" autoplay="{{$vChoice$vSwper$swiperConfig.autoplay}}" interval="{{$vChoice$vSwper$swiperConfig.interval}}" duration="{{$vChoice$vSwper$swiperConfig.duration}}">
         <block  wx:for="{{$vChoice$vSwper$alldata}}" wx:key="id">
             <swiper-item>
                 <image src="{{item.imgUrl}}" style="width: 100%; height=100%;" mode="aspectFill" data-id="{{item.id}}" bindtap="$vChoice$vSwper$tap" lazy-load="true"/>
@@ -14,25 +14,25 @@
         </block>
     </swiper>
 
-        <view class="_141034e">
+        <view class="_c622cf8">
             
-    <view class="title _5a01040 _141034e" data-leftText="{{$vChoice$vBaseTitle$leftText}}" data-rightText="{{$vChoice$vBaseTitle$rightText}}" bindtap="$vChoice$vBaseTitle$tap">
-        <text class="left _5a01040">{{$vChoice$vBaseTitle$leftText}}</text>
-        <view class="right _5a01040">
-            <text class="_5a01040">{{$vChoice$vBaseTitle$rightText}}</text>
+    <view class="title _5cdf0f6 _c622cf8" data-leftText="{{$vChoice$vBaseTitle$leftText}}" data-rightText="{{$vChoice$vBaseTitle$rightText}}" bindtap="$vChoice$vBaseTitle$tap">
+        <text class="left _5cdf0f6">{{$vChoice$vBaseTitle$leftText}}</text>
+        <view class="right _5cdf0f6">
+            <text class="_5cdf0f6">{{$vChoice$vBaseTitle$rightText}}</text>
         </view>
     </view>
-            <block class="_141034e" wx:for="{{$vChoice$hotTopic}}" wx:for-index="$vChoice$index" wx:for-item="$vChoice$item" wx:key="$vChoice$index">
+            <block class="_c622cf8" wx:for="{{$vChoice$hotTopic}}" wx:for-index="$vChoice$index" wx:for-item="$vChoice$item" wx:key="$vChoice$index">
                 
-    <view class="text _cac26d0 _141034e" bindtap="$vChoice$vText$tap" data-text="{{$vChoice$item.name}}" data-com-index="{{$vChoice$index}}">{{$vChoice$item.name}}</view>
+    <view class="text _ea3c47c _c622cf8" bindtap="$vChoice$vText$tap" data-text="{{$vChoice$item.name}}" data-com-index="{{$vChoice$index}}">{{$vChoice$item.name}}</view>
             </block>
         </view>
         
-    <view class="title _cbe9f31 _141034e">{{$vChoice$vTitle$title}}</view>
+    <view class="title _e409347 _c622cf8">{{$vChoice$vTitle$title}}</view>
         
-    <view class="list _8717e31 _141034e">
-        <block class="_8717e31" wx:for="{{$vChoice$vGrid$list}}" wx:for-index="$vChoice$vGrid$index" wx:for-item="$vChoice$vGrid$item" wx:key="$vChoice$vGrid$index">
-            <image class="img _8717e31" style="{{$vChoice$vGrid$imgStyle}}" src="{{$vChoice$vGrid$item.url}}" mode="aspectFill" data-id="{{$vChoice$vGrid$item.id}}" bindtap="$vChoice$vGrid$tap"/>
+    <view class="list _114a14a _c622cf8">
+        <block class="_114a14a" wx:for="{{$vChoice$vGrid$list}}" wx:for-index="$vChoice$vGrid$index" wx:for-item="$vChoice$vGrid$item" wx:key="$vChoice$vGrid$index">
+            <image class="img _114a14a" style="{{$vChoice$vGrid$imgStyle}}" src="{{$vChoice$vGrid$item.url}}" mode="aspectFill" data-id="{{$vChoice$vGrid$item.id}}" bindtap="$vChoice$vGrid$tap"/>
         </block>
     </view>
     </view>

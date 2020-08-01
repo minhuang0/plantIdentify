@@ -2,4 +2,4 @@
 @import "./activity.wxss";
 @import "./recommend.wxss";
 @import "./../../components/navbar.wxss";
-.hidden._fc01642{display:none}
+.hidden._cbc2e16{display:none}

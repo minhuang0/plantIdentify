@@ -1,21 +1,21 @@
 
-    <view class="moments _ec3ac2c">
+    <view class="moments _a71b614">
         
-    <view class="title _5a01040 title _ec3ac2c" data-leftText="{{$vBaseTitle$leftText}}" data-rightText="{{$vBaseTitle$rightText}}" bindtap="$vBaseTitle$tap">
-        <text class="left _5a01040">{{$vBaseTitle$leftText}}</text>
-        <view class="right _5a01040">
-            <text class="_5a01040">{{$vBaseTitle$rightText}}</text>
+    <view class="title _5cdf0f6 title _a71b614" data-leftText="{{$vBaseTitle$leftText}}" data-rightText="{{$vBaseTitle$rightText}}" bindtap="$vBaseTitle$tap">
+        <text class="left _5cdf0f6">{{$vBaseTitle$leftText}}</text>
+        <view class="right _5cdf0f6">
+            <text class="_5cdf0f6">{{$vBaseTitle$rightText}}</text>
         </view>
     </view>
         <!-- <repeat for="{{adapterPosts}}" key="index" index="index" item="item"> -->
         
-    <block class="_bdfbe46 list _ec3ac2c" wx:for="{{$vCourse$list}}" wx:for-index="$vCourse$index" wx:for-item="$vCourse$item" wx:key="$vCourse$index">
-        <view class="course _bdfbe46" data-id="{{$vCourse$item.id}}" bindtap="$vCourse$tap">
-            <image class="cover _bdfbe46" src="{{$vCourse$item.cover}}" mode="aspectFill"/>
-            <view class="content-view _bdfbe46">
-                <text class="title _bdfbe46">{{$vCourse$item.title}}</text>
-                <text class="description ellipsis _bdfbe46">{{$vCourse$item.description}}</text>
-                <text class="tag _bdfbe46">{{$vCourse$item.tag}}</text>
+    <block class="_ac76620 list _a71b614" wx:for="{{$vCourse$list}}" wx:for-index="$vCourse$index" wx:for-item="$vCourse$item" wx:key="$vCourse$index">
+        <view class="course _ac76620" data-id="{{$vCourse$item.id}}" bindtap="$vCourse$tap">
+            <image class="cover _ac76620" src="{{$vCourse$item.cover}}" mode="aspectFill"/>
+            <view class="content-view _ac76620">
+                <text class="title _ac76620">{{$vCourse$item.title}}</text>
+                <text class="description ellipsis _ac76620">{{$vCourse$item.description}}</text>
+                <text class="tag _ac76620">{{$vCourse$item.tag}}</text>
             </view>
         </view>
     </block>

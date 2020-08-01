@@ -11,12 +11,17 @@
         config = {
             pages: [
                 'pages/map/index',
+                'pages/publish/index',
                 'pages/publish/welcome',
                 'pages/live/index',
                 'pages/publish/show',
-                'pages/publish/index',
                 'pages/publish/detail'
             ],
+            "permission": {
+                "scope.userLocation": {
+                    "desc": "获取您的定位中..."
+                }
+            },
             window: {
                 backgroundTextStyle: 'light',
                 navigationBarBackgroundColor: '#fff',

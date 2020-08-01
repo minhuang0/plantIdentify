@@ -8,7 +8,7 @@
         </view>
         <view class="list">
             <block wx:for="{{formatResult}}" wx:key="{{index}}">
-                <view wx:if="{{item.abstracts}}" class="detail" @tap="goWebviewDetail" data-item="{{item}}">
+                <view wx:if="{{item.name}}" class="detail" @tap="goWebviewDetail" data-item="{{item}}">
                     <image src="{{item.imageUrl}}" class="image" mode="aspectFit"></image>
                     <view class="decription">
                         <view class="name">{{item.name}}</view>
@@ -74,10 +74,10 @@
                     if (this.isOnlyShowFirst && arr.length === 1) {
                         return arr
                     }
-                    if (!i.desList) {
-                        return arr
-                    }
-                    if (Array.isArray(i.desList)) {
+                    // if (!i.desList) {
+                    //     return arr
+                    // }
+                    if (i.desList && Array.isArray(i.desList)) {
                         i.desList.map((item) => {
                             arr.push({
                                 score: parseInt(i.score * 100) + '%',
@@ -91,8 +91,8 @@
                     arr.push({
                         score: parseInt(i.score * 100) + '%',
                         name: i.name,
-                        imageUrl: i.desList.imageUrl || '',
-                        abstracts: i.desList.abstracts || ''
+                        imageUrl: i.desList && i.desList.imageUrl || '',
+                        abstracts: i.desList && i.desList.abstracts || ''
                     })
                     return arr
                 }, [])
@@ -147,7 +147,7 @@
             this.$apply()
         }
         parseLeafSnapResponse (rsp = '{}') {
-            const res = JSON.parse(rsp)
+            const res = JSON.parse(rsp);
             const result = res.res && res.res.result
             this.shareId = res.id
             this.result = Array.isArray(result) ? result : result ? [result] : []
@@ -192,7 +192,6 @@
                     // type: 'wgs84',
                     type: 'gcj02',
                     success: function(res) {
-                        console.log(res)
                         resolve(res)
                     }
                 })

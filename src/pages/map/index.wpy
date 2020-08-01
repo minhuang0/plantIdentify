@@ -127,7 +127,6 @@
         async getPositionAndUpdateMarkets (e) {
             // 5-18 scale缩放范围
             const { latitude, longitude, boundary } = await this.getBoundaryAndCenterLatitudeAdnLongitude()
-            console.log(boundary)
             await this.getList({ latitude, longitude, boundary })
             this.updateMarkers()
         }

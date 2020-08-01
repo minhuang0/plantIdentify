@@ -2,4 +2,4 @@
 @import "./../../components/grid.wxss";
 @import "./../../components/baseTitle.wxss";
 @import "./../../components/text.wxss";
-.categories._141034e,.list._141034e{background-color:#f8f8f8}
+.categories._c622cf8,.list._c622cf8{background-color:#f8f8f8}

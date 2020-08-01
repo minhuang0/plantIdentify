@@ -1,18 +1,18 @@
 
-    <view class="_fc01642">
+    <view class="_cbc2e16">
         
-    <view class="weui-navbar _a72108a _fc01642">
-        <block  wx:for="{{$vNavbar$alldata}}" wx:key="{{index}}" class="_a72108a">
-            <view id="{{index}}" class="weui-navbar__item _a72108a {{$vNavbar$activeIndex == index ? 'weui-bar__item_on' : ''}}"  bindtap="$vNavbar$tabClick">
-                <view class="weui-navbar__title _a72108a">{{item.title}}</view>
+    <view class="weui-navbar _cf8f336 _cbc2e16">
+        <block  wx:for="{{$vNavbar$alldata}}" wx:key="{{index}}" class="_cf8f336">
+            <view id="{{index}}" class="weui-navbar__item _cf8f336 {{$vNavbar$activeIndex == index ? 'weui-bar__item_on' : ''}}"  bindtap="$vNavbar$tabClick">
+                <view class="weui-navbar__title _cf8f336">{{item.title}}</view>
             </view>
         </block>
-        <view class="weui-navbar__slider _a72108a" style="left: {{$vNavbar$sliderLeft}}px; transform: translateX({{$vNavbar$sliderOffset}}px); -webkit-transform: translateX({{$vNavbar$sliderOffset}}px);"/>
+        <view class="weui-navbar__slider _cf8f336" style="left: {{$vNavbar$sliderLeft}}px; transform: translateX({{$vNavbar$sliderOffset}}px); -webkit-transform: translateX({{$vNavbar$sliderOffset}}px);"/>
     </view>
         
-    <view class="_b70c249 _fc01642 {{activeIndex !== 0 ? 'hidden' : ''}}">
+    <view class="_40ebb5f _cbc2e16 {{activeIndex !== 0 ? 'hidden' : ''}}">
         
-    <swiper class="swiper _b70c249" indicator-dots="{{$vRecommend$vSwper$swiperConfig.indicatorDots}}" autoplay="{{$vRecommend$vSwper$swiperConfig.autoplay}}" interval="{{$vRecommend$vSwper$swiperConfig.interval}}" duration="{{$vRecommend$vSwper$swiperConfig.duration}}">
+    <swiper class="swiper _40ebb5f" indicator-dots="{{$vRecommend$vSwper$swiperConfig.indicatorDots}}" autoplay="{{$vRecommend$vSwper$swiperConfig.autoplay}}" interval="{{$vRecommend$vSwper$swiperConfig.interval}}" duration="{{$vRecommend$vSwper$swiperConfig.duration}}">
         <block  wx:for="{{$vRecommend$vSwper$alldata}}" wx:key="id">
             <swiper-item>
                 <image src="{{item.imgUrl}}" style="width: 100%; height=100%;" mode="aspectFill" data-id="{{item.id}}" bindtap="$vRecommend$vSwper$tap" lazy-load="true"/>
@@ -21,64 +21,64 @@
     </swiper>
 
         
-    <view class="title _cbe9f31 _b70c249">{{$vRecommend$vTitle1$title}}</view>
+    <view class="title _e409347 _40ebb5f">{{$vRecommend$vTitle1$title}}</view>
         
-    <view class="list _ae96fef categories _b70c249">
-        <block  wx:for="{{$vRecommend$vHScroll$alldata}}" wx:key="{{index}}" class="_ae96fef">
-            <view class="item _ae96fef" data-id="{{item.id}}" bindtap="$vRecommend$vHScroll$tap">
-                <image class="cover _ae96fef" src="{{item.cover}}" mode="aspectFill"/>
-                <text class="title _ae96fef">{{item.title}}</text>
+    <view class="list _45ff305 categories _40ebb5f">
+        <block  wx:for="{{$vRecommend$vHScroll$alldata}}" wx:key="{{index}}" class="_45ff305">
+            <view class="item _45ff305" data-id="{{item.id}}" bindtap="$vRecommend$vHScroll$tap">
+                <image class="cover _45ff305" src="{{item.cover}}" mode="aspectFill"/>
+                <text class="title _45ff305">{{item.title}}</text>
             </view>
         </block>
     </view>
         
-    <view class="title _cbe9f31 _b70c249">{{$vRecommend$vTitle2$title}}</view>
+    <view class="title _e409347 _40ebb5f">{{$vRecommend$vTitle2$title}}</view>
         
-    <view class="list _5b13789 list _b70c249">
-        <block class="_5b13789" wx:for="{{$vRecommend$vList$list}}" wx:for-index="$vRecommend$vList$index" wx:for-item="$vRecommend$vList$item" wx:key="$vRecommend$vList$index">
+    <view class="list _4b568b3 list _40ebb5f">
+        <block class="_4b568b3" wx:for="{{$vRecommend$vList$list}}" wx:for-index="$vRecommend$vList$index" wx:for-item="$vRecommend$vList$item" wx:key="$vRecommend$vList$index">
             
-    <view class="recommend _babbf7e _5b13789" data-id="{{$vRecommend$vList$item.id}}" bindtap="$vRecommend$vList$vItem$tap" data-com-index="{{$vRecommend$vList$index}}">
-        <view class="cover _babbf7e">
-            <image class="cover-img _babbf7e" src="{{$vRecommend$vList$item.cover}}" mode="aspectFill" lazy-load="true"/>
-            <text class="recomment-title _babbf7e">{{$vRecommend$vList$item.title}}</text>
-            <text class="tag _babbf7e">{{$vRecommend$vList$item.tag}}</text>
+    <view class="recommend _aaff0a8 _4b568b3" data-id="{{$vRecommend$vList$item.id}}" bindtap="$vRecommend$vList$vItem$tap" data-com-index="{{$vRecommend$vList$index}}">
+        <view class="cover _aaff0a8">
+            <image class="cover-img _aaff0a8" src="{{$vRecommend$vList$item.cover}}" mode="aspectFill" lazy-load="true"/>
+            <text class="recomment-title _aaff0a8">{{$vRecommend$vList$item.title}}</text>
+            <text class="tag _aaff0a8">{{$vRecommend$vList$item.tag}}</text>
         </view>
     </view>
         </block>
     </view>
     </view>
         
-    <view class="_65c645e _fc01642 {{activeIndex !== 1 ? 'hidden' : ''}}">
-        <block class="_65c645e" wx:for="{{$vForgen$lists}}" wx:for-index="$vForgen$index" wx:for-item="$vForgen$item" wx:key="$vForgen$index">
+    <view class="_518f308 _cbc2e16 {{activeIndex !== 1 ? 'hidden' : ''}}">
+        <block class="_518f308" wx:for="{{$vForgen$lists}}" wx:for-index="$vForgen$index" wx:for-item="$vForgen$item" wx:key="$vForgen$index">
             
-    <view class="title _cbe9f31 _65c645e">{{$vForgen$item.categoryName}}</view>
+    <view class="title _e409347 _518f308">{{$vForgen$item.categoryName}}</view>
             
-    <block class="_bdfbe46 list _65c645e" wx:for="{{$vForgen$item.list}}" wx:for-index="$vForgen$vCourse$index" wx:for-item="$vForgen$vCourse$item" wx:key="$vForgen$vCourse$index">
-        <view class="course _bdfbe46" data-id="{{$vForgen$vCourse$item.id}}" bindtap="$vForgen$vCourse$tap" data-com-index="{{$vForgen$index}}">
-            <image class="cover _bdfbe46" src="{{$vForgen$vCourse$item.cover}}" mode="aspectFill"/>
-            <view class="content-view _bdfbe46">
-                <text class="title _bdfbe46">{{$vForgen$vCourse$item.title}}</text>
-                <text class="description ellipsis _bdfbe46">{{$vForgen$vCourse$item.description}}</text>
-                <text class="tag _bdfbe46">{{$vForgen$vCourse$item.tag}}</text>
+    <block class="_ac76620 list _518f308" wx:for="{{$vForgen$item.list}}" wx:for-index="$vForgen$vCourse$index" wx:for-item="$vForgen$vCourse$item" wx:key="$vForgen$vCourse$index">
+        <view class="course _ac76620" data-id="{{$vForgen$vCourse$item.id}}" bindtap="$vForgen$vCourse$tap" data-com-index="{{$vForgen$index}}">
+            <image class="cover _ac76620" src="{{$vForgen$vCourse$item.cover}}" mode="aspectFill"/>
+            <view class="content-view _ac76620">
+                <text class="title _ac76620">{{$vForgen$vCourse$item.title}}</text>
+                <text class="description ellipsis _ac76620">{{$vForgen$vCourse$item.description}}</text>
+                <text class="tag _ac76620">{{$vForgen$vCourse$item.tag}}</text>
             </view>
         </view>
     </block>
         </block>
     </view>
         
-    <view class="activities _5a62c46 _fc01642 {{activeIndex !== 2 ? 'hidden' : ''}}">
-        <block class="_5a62c46" wx:for="{{$vActivities$activities}}" wx:for-index="$vActivities$index" wx:for-item="$vActivities$item" wx:key="$vActivities$index">
+    <view class="activities _10c8f20 _cbc2e16 {{activeIndex !== 2 ? 'hidden' : ''}}">
+        <block class="_10c8f20" wx:for="{{$vActivities$activities}}" wx:for-index="$vActivities$index" wx:for-item="$vActivities$item" wx:key="$vActivities$index">
             
-    <view class="activity _0ca24fa _5a62c46" data-id="{{$vActivities$item.id}}" bindtap="$vActivities$vActivity$tap" data-com-index="{{$vActivities$index}}">
-        <image class="cover _0ca24fa" src="{{$vActivities$item.cover}}" mode="aspectFill"/>
-        <view class="content-view _0ca24fa">
-            <text class="title _0ca24fa">{{$vActivities$item.title}}</text>
-            <text class="description _0ca24fa">{{$vActivities$item.description}}</text>
+    <view class="activity _ac49db8 _10c8f20" data-id="{{$vActivities$item.id}}" bindtap="$vActivities$vActivity$tap" data-com-index="{{$vActivities$index}}">
+        <image class="cover _ac49db8" src="{{$vActivities$item.cover}}" mode="aspectFill"/>
+        <view class="content-view _ac49db8">
+            <text class="title _ac49db8">{{$vActivities$item.title}}</text>
+            <text class="description _ac49db8">{{$vActivities$item.description}}</text>
             <!-- <text class="time">{{item.time}}</text>
             <text class="address">{{item.address}}</text> -->
-            <view class="last _0ca24fa">
+            <view class="last _ac49db8">
                 <!-- <text class="money">{{item.money > 0 ? item.money : '免费'}}</text> -->
-                <text class="join _0ca24fa" type="default">报名</text>
+                <text class="join _ac49db8" type="default">报名</text>
             </view>
         </view>
     </view>

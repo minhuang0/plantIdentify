@@ -1,0 +1,30 @@
+
+    <view class="content _8ddf0e0">
+        <view class="cover _8ddf0e0" bindtap="goWebviewDetail">
+            <image src="{{image}}" class="image _8ddf0e0" mode="aspectFit"/>
+            <view class="shadow _8ddf0e0">
+                拍摄实物图
+            </view>
+        </view>
+        <view class="list _8ddf0e0">
+            <block  wx:for="{{formatResult}}" wx:key="{{index}}" class="_8ddf0e0">
+                <view wx:if="{{item.name}}" class="detail _8ddf0e0" bindtap="goWebviewDetail" data-item="{{item}}">
+                    <image src="{{item.imageUrl}}" class="image _8ddf0e0" mode="aspectFit"/>
+                    <view class="decription _8ddf0e0">
+                        <view class="name _8ddf0e0">{{item.name}}</view>
+                        <view class="_8ddf0e0">{{ '识别程度: ' + item.score}}</view>
+                        <view class="abstracts ellipsis _8ddf0e0">{{item.abstracts}}</view>
+                    </view>
+                </view>
+                <!-- <view class="item">
+                    <view class="name">{{item.name}}</view>
+                    <view>{{item.score}}</view>
+                </view> -->
+            </block>
+            <view class="no-plant _8ddf0e0"  wx:if="{{isNotPlant}}">抱歉, 查不到该植物信息!</view>
+        </view>
+        <view class="more _8ddf0e0"  wx:if="{{result.length > 0 && isOnlyShowFirst && !isNotPlant}}" bindtap="showMore">查看更多结果</view>
+        <view class="iconfont icon icon-cancel _8ddf0e0" bindtap="close"/>
+        <image src="{{loadImage}}" bindload="loadimage" class="load-image _8ddf0e0" mode="aspectFit"/>
+        <canvas canvas-id="canvas" style="width: {{canvas.width}}px; height: {{canvas.height}}px;" class="canvas _8ddf0e0"/>
+    </view>

@@ -1,2 +1,2 @@
 @import "./../../components/moment.wxss";
-.moments._0eb65ca{position:relative;display:-webkit-box;display:-webkit-flex;display:flex;padding-bottom:10rpx;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;background-color:#f8f8f8;background-color:#f8f8f8}
+.moments._9ef7160{position:relative;display:-webkit-box;display:-webkit-flex;display:flex;padding-bottom:10rpx;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;background-color:#f8f8f8;background-color:#f8f8f8}
